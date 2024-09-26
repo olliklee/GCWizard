@@ -38,7 +38,7 @@ class ElementTile extends StatelessWidget {
   const ElementTile({
     Key? key,
     required this.atomicNumber,
-    required this.border,
+    this.border = true,
     this.bgColor,
     this.textColor,
   }) : super(key: key);
@@ -96,4 +96,28 @@ class ElementTile extends StatelessWidget {
             ),
           );
   }
+}
+
+class PeriodicTablePage extends StatelessWidget {
+  const PeriodicTablePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Periodensystem'),
+      ),
+      body: const Center(
+        child: ElementTile(
+          atomicNumber: 1,
+        ),
+      ),
+    );
+  }
+}
+
+void main() {
+  runApp(const MaterialApp(
+    home: PeriodicTablePage(),
+  ));
 }
