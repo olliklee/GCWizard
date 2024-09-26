@@ -65,7 +65,7 @@ class ElementTile extends StatelessWidget {
               width: tileWidth,
               height: tileHeight,
               decoration: BoxDecoration(
-                color: bgColor ?? Colors.blueAccent,
+                color: bgColor ?? ChemicalStateColor.lightCyan.color,
                 borderRadius: BorderRadius.circular(4.0),
                 border:
                     border ? Border.all(color: Colors.black, width: 1.0) : null,
