@@ -148,7 +148,16 @@ class _HexViewerState extends State<HexViewer> {
             child: Row(
               children: [
                 GCWIconButton(
-                  icon: Icons.arrow_back_ios,
+                  icon: Icons.first_page,
+                  onPressed: () {
+                    setState(() {
+                      _currentLines = 0;
+                      _resetScrollViews();
+                    });
+                  },
+                ),
+                GCWIconButton(
+                  icon: Icons.keyboard_arrow_left,
                   onPressed: () {
                     setState(() {
                       _currentLines -= _MAX_LINES;
@@ -168,7 +177,7 @@ class _HexViewerState extends State<HexViewer> {
                   ),
                 ),
                 GCWIconButton(
-                  icon: Icons.arrow_forward_ios,
+                  icon: Icons.keyboard_arrow_right,
                   onPressed: () {
                     setState(() {
                       _currentLines += _MAX_LINES;
@@ -179,7 +188,16 @@ class _HexViewerState extends State<HexViewer> {
                       _resetScrollViews();
                     });
                   },
-                )
+                ),
+                GCWIconButton(
+                  icon: Icons.last_page,
+                  onPressed: () {
+                    setState(() {
+                      _currentLines = (_hexDataLines!.floor() ~/ _MAX_LINES) * _MAX_LINES;
+                      _resetScrollViews();
+                    });
+                  },
+                ),
               ],
             ),
           ),
