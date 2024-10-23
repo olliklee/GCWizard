@@ -4,7 +4,7 @@ import 'package:gc_wizard/common_widgets/dividers/gcw_text_divider.dart';
 import 'package:gc_wizard/common_widgets/dropdowns/gcw_dropdown.dart';
 import 'package:gc_wizard/common_widgets/outputs/gcw_default_output.dart';
 import 'package:gc_wizard/common_widgets/switches/gcw_onoff_switch.dart';
-import 'package:gc_wizard/common_widgets/switches/gcw_twooptions_switch.dart';
+import 'package:gc_wizard/common_widgets/switches/gcw_twooptions_switch_new.dart';
 import 'package:gc_wizard/common_widgets/textfields/gcw_textfield.dart';
 import 'package:gc_wizard/tools/crypto_and_encodings/book_cipher/logic/book_cipher.dart';
 
@@ -165,7 +165,7 @@ class _BookCipherState extends State<BookCipher> {
 
   Widget _buildDecodeModusControl(BuildContext context) {
     return GCWTwoOptionsSwitch(
-      leftValue: i18n(context, 'book_cipher_searchposition'),
+      leftValue: "The quick brown fox jumps over the lazy dog!The quick brown fox jumps over the lazy dog!The quick brown fox jumps over the lazy dog!The quick brown fox jumps over the lazy dog!",//i18n(context, 'book_cipher_searchposition'),
       rightValue: i18n(context, 'book_cipher_searchword'),
       value: _currentMode,
       onChanged: (value) {
