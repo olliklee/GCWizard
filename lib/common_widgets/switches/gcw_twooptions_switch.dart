@@ -3,7 +3,6 @@ import 'package:gc_wizard/application/i18n/logic/app_localizations.dart';
 import 'package:gc_wizard/application/theme/theme.dart';
 import 'package:gc_wizard/application/theme/theme_colors.dart';
 import 'package:gc_wizard/common_widgets/gcw_text.dart';
-import 'package:gc_wizard/common_widgets/switches/gcw_switch.dart';
 
 enum GCWSwitchPosition { left, right }
 
@@ -18,13 +17,13 @@ class GCWTwoOptionsSwitch extends StatefulWidget {
 
   const GCWTwoOptionsSwitch(
       {Key? key,
-      this.title,
-      this.leftValue,
-      this.rightValue,
-      required this.value,
-      required this.onChanged,
-      this.alternativeColor = false,
-      this.notitle = false})
+        this.title,
+        this.leftValue,
+        this.rightValue,
+        required this.value,
+        required this.onChanged,
+        this.alternativeColor = false,
+        this.notitle = false})
       : super(key: key);
 
   @override
@@ -38,60 +37,107 @@ class _GCWTwoOptionsSwitchState extends State<GCWTwoOptionsSwitch> {
     ThemeColors colors = themeColors();
 
     var textStyle = gcwTextStyle();
-    if (widget.alternativeColor) textStyle = textStyle.copyWith(color: colors.dialogText());
+    if (widget.alternativeColor) {
+      textStyle = textStyle.copyWith(color: colors.dialogText());
+    }
 
-    return Row(
-      children: <Widget>[
-        widget.notitle
-            ? Container()
-            : Expanded(
-                flex: 1,
-                child: GCWText(
-                  text: (widget.title ?? i18n(context, 'common_mode')) + ':',
-                  style: textStyle,
-                )),
-        Expanded(
-            flex: 3,
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: themeColors().inActive().withOpacity(0.2)),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (!widget.notitle)
+            GCWText(
+              text: (widget.title ?? i18n(context, 'common_mode')),
+              style: textStyle,
+            ),
+          const SizedBox(height: 8.0),
+          IntrinsicHeight(
             child: Row(
               children: <Widget>[
+                const SizedBox(width: 12.0,),
                 Expanded(
-                    flex: 1,
-                    child: (widget.leftValue == null || widget.leftValue is String)
-                        ? GCWText(
-                            text: widget.leftValue == null
-                                ? i18n(context, 'common_encrypt')
-                                : (widget.leftValue as String),
-                            align: Alignment.center,
-                            style: textStyle,
-                          )
-                        : widget.leftValue as Widget),
-                GCWSwitch(
-                  value: _currentValue == GCWSwitchPosition.right,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentValue = value ? GCWSwitchPosition.right : GCWSwitchPosition.left;
-                      widget.onChanged(_currentValue);
-                    });
-                  },
-                  activeThumbColor: widget.alternativeColor ? colors.switchThumb1() : colors.switchThumb2(),
-                  activeTrackColor: widget.alternativeColor ? colors.switchTrack1() : colors.switchTrack2(),
-                  inactiveThumbColor: widget.alternativeColor ? colors.switchThumb1() : colors.switchThumb2(),
-                  inactiveTrackColor: widget.alternativeColor ? colors.switchTrack1() : colors.switchTrack2(),
+                  flex: 1,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: _currentValue == GCWSwitchPosition.left
+                          ? themeColors().checkBoxCheckColor()
+                          : themeColors().inActive().withOpacity(0.2),
+                      foregroundColor: _currentValue == GCWSwitchPosition.left
+                          ? themeColors().dialogText()
+                          : themeColors().mainFont(),
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8.0),
+                          bottomLeft: Radius.circular(8.0)
+                        )
+                      )
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _currentValue = GCWSwitchPosition.left;
+                        widget.onChanged(_currentValue);
+                      });
+                    },
+                    child: Container(
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: Text(
+                          widget.leftValue == null
+                          ? i18n(context, 'common_encrypt')
+                          : widget.leftValue.toString(),
+                      textAlign: TextAlign.right,
+                      ),
+                    ),
+                  )
                 ),
                 Expanded(
-                    flex: 1,
-                    child: (widget.rightValue == null || widget.rightValue is String)
-                        ? GCWText(
-                            text: widget.rightValue == null
-                                ? i18n(context, 'common_decrypt')
-                                : (widget.rightValue as String),
-                            align: Alignment.center,
-                            style: textStyle,
-                          )
-                        : widget.rightValue as Widget),
+                  flex: 1,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                        backgroundColor: _currentValue == GCWSwitchPosition.right
+                            ? themeColors().checkBoxCheckColor()
+                            : themeColors().inActive().withOpacity(0.2),
+                        foregroundColor: _currentValue == GCWSwitchPosition.right
+                            ? themeColors().dialogText()
+                            : themeColors().mainFont(),
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(8.0),
+                                bottomRight: Radius.circular(8.0)
+                            )
+                        )
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _currentValue = GCWSwitchPosition.right;
+                        widget.onChanged(_currentValue);
+                      });
+                    },
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Text(
+                        widget.rightValue == null
+                            ? i18n(context, 'common_decrypt')
+                            : widget.rightValue.toString(),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12.0,)
               ],
-            ))
-      ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
