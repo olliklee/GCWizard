@@ -132,8 +132,13 @@ class _GCWTwoOptionsSwitchState extends State<GCWTwoOptionsSwitch> {
           child: Text(
             label.toString(),
             style: gcwTextStyle().apply(
-              color: isSelected ? colors.dialogText() : null,
+              color: isSelected
+                  ? colors.dialogText()
+                  : null,
             ),
+            textAlign: position == GCWSwitchPosition.left
+                ? TextAlign.right
+                : TextAlign.left
           ),
         ),
       ),
