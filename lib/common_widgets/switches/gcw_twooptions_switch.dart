@@ -40,7 +40,7 @@ class _GCWTwoOptionsSwitchState extends State<GCWTwoOptionsSwitch> {
     if (widget.alternativeColor) textStyle = textStyle.copyWith(color: colors.dialogText());
 
     return Container(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(6.0),
       decoration: BoxDecoration(
         border: Border.all(color: themeColors().inActive().withOpacity(0.2)),
         borderRadius: BorderRadius.circular(8.0),
