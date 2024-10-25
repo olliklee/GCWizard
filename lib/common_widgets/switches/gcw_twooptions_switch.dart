@@ -55,7 +55,7 @@ class _GCWTwoOptionsSwitchState extends State<GCWTwoOptionsSwitch> {
     }
 
     return Container(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(6.0),
       decoration: BoxDecoration(
         border: Border.all(color: colors.inActive().withOpacity(0.2)),
         borderRadius: BorderRadius.circular(8.0),
