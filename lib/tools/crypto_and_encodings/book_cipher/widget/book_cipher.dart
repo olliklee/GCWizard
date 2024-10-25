@@ -165,7 +165,7 @@ class _BookCipherState extends State<BookCipher> {
 
   Widget _buildDecodeModusControl(BuildContext context) {
     return GCWTwoOptionsSwitch(
-      leftValue: "The quick brown fox jumps over the lazy dog!The quick brown fox jumps over the lazy dog!The quick brown fox jumps over the lazy dog!The quick brown fox jumps over the lazy dog!",//i18n(context, 'book_cipher_searchposition'),
+      leftValue: i18n(context, 'book_cipher_searchposition'),
       rightValue: i18n(context, 'book_cipher_searchword'),
       value: _currentMode,
       onChanged: (value) {
