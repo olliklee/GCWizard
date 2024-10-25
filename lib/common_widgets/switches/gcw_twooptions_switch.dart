@@ -3,7 +3,6 @@ import 'package:gc_wizard/application/i18n/logic/app_localizations.dart';
 import 'package:gc_wizard/application/theme/theme.dart';
 import 'package:gc_wizard/application/theme/theme_colors.dart';
 import 'package:gc_wizard/common_widgets/gcw_text.dart';
-import 'package:gc_wizard/common_widgets/switches/gcw_switch.dart';
 
 enum GCWSwitchPosition { left, right }
 
@@ -16,37 +15,22 @@ class GCWTwoOptionsSwitch extends StatefulWidget {
   final bool alternativeColor;
   final bool notitle;
 
-  const GCWTwoOptionsSwitch({
-    Key? key,
+  const GCWTwoOptionsSwitch(
+      {Key? key,
         this.title,
         this.leftValue,
         this.rightValue,
         required this.value,
         required this.onChanged,
         this.alternativeColor = false,
-        this.notitle = false,
-  }) : super(key: key);
+        this.notitle = false})
+      : super(key: key);
 
   @override
   _GCWTwoOptionsSwitchState createState() => _GCWTwoOptionsSwitchState();
 }
 
 class _GCWTwoOptionsSwitchState extends State<GCWTwoOptionsSwitch> {
-  late GCWSwitchPosition _currentValue;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentValue = widget.value ?? GCWSwitchPosition.left;
-  }
-
-  void _updateValue(GCWSwitchPosition newValue) {
-    setState(() {
-      _currentValue = newValue;
-      widget.onChanged(_currentValue);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     var _currentValue = widget.value ?? GCWSwitchPosition.left;
@@ -66,7 +50,7 @@ class _GCWTwoOptionsSwitchState extends State<GCWTwoOptionsSwitch> {
         children: [
           if (!widget.notitle)
             GCWText(
-              text: (widget.title ?? i18n(context, 'common_mode')),
+              text: widget.title ?? i18n(context, 'common_mode'),
               style: textStyle,
             ),
           const SizedBox(height: 8.0),
