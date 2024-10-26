@@ -48,10 +48,10 @@ class _GCWOnOffSwitchState extends State<GCWOnOffSwitch> {
 
     return Container(
       padding: const EdgeInsets.all(2.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: colors.inActive().withOpacity(0.2)),
-        borderRadius: BorderRadius.circular(6.0),
-      ),
+      // decoration: BoxDecoration(
+      //   border: Border.all(color: colors.inActive().withOpacity(0.2)),
+      //   borderRadius: BorderRadius.circular(6.0),
+      // ),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -67,6 +67,8 @@ class _GCWOnOffSwitchState extends State<GCWOnOffSwitch> {
                       const SizedBox(width: 12.0),
                       Checkbox(
                         value: _currentValue,
+                        activeColor: colors.checkBoxCheckColor(),
+                        checkColor: colors.dialogText(),
                         onChanged: (value) {
                           setState(() {
                             _toggleCheckbox(); // Update the state with the new value
@@ -74,14 +76,12 @@ class _GCWOnOffSwitchState extends State<GCWOnOffSwitch> {
                         },
                       ),
                       const SizedBox(width: 8.0),
-
-                      Text(
-                        widget.title ?? '',
-                        style: _currentValue
-                          ? gcwTextStyle().apply(color: colors.checkBoxCheckColor())
-                            : gcwTextStyle().apply(color: colors.checkBoxActiveColor())
-                      ),
-
+                      Text(widget.title ?? '',
+                          style: _currentValue
+                              ? gcwTextStyle()
+                              .apply(color: colors.dialogText())
+                              : gcwTextStyle()
+                              .apply(color: colors.checkBoxActiveColor())),
                     ],
                   ),
                 ),
