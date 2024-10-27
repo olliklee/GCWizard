@@ -4,8 +4,11 @@ import 'package:prefs/prefs.dart';
 
 part 'package:gc_wizard/application/theme/themes/theme_colors_dark.dart';
 part 'package:gc_wizard/application/theme/themes/theme_colors_light.dart';
+part 'package:gc_wizard/application/theme/themes/theme_colors_accessible_dark.dart';
+part 'package:gc_wizard/application/theme/themes/theme_colors_accessible_light.dart';
 
-enum ThemeType { DARK, LIGHT }
+
+enum ThemeType { DARK, LIGHT, DARKACCESSIBLE, LIGHTACCESSIBLE }
 
 ThemeColors? _themeColors;
 
@@ -62,6 +65,10 @@ void setThemeColorsByName(String themeColor) {
     setThemeColors(ThemeType.DARK);
   } else if (themeColor == ThemeType.LIGHT.toString()) {
     setThemeColors(ThemeType.LIGHT);
+  } else if (themeColor == ThemeType.DARKACCESSIBLE.toString()) {
+    setThemeColors(ThemeType.DARKACCESSIBLE);
+  } else if (themeColor == ThemeType.LIGHTACCESSIBLE.toString()) {
+    setThemeColors(ThemeType.LIGHTACCESSIBLE);
   }
 }
 
@@ -72,6 +79,12 @@ void setThemeColors(ThemeType type) {
       break;
     case ThemeType.LIGHT:
       _themeColors = _ThemeColorsLight();
+      break;
+    case ThemeType.DARKACCESSIBLE:
+      _themeColors = _ThemeColorsDarkAccessible();
+      break;
+    case ThemeType.LIGHTACCESSIBLE:
+      _themeColors = _ThemeColorsLightAccessible();
       break;
     default:
       return;

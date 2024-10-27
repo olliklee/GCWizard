@@ -112,13 +112,34 @@ class _GeneralSettingsState extends State<GeneralSettings> {
           onChanged: (value) {
             setState(() {
               if (value == GCWSwitchPosition.left) {
-                Prefs.setString(PREFERENCE_THEME_COLOR, ThemeType.DARK.toString());
-                setThemeColors(ThemeType.DARK);
+                if (Prefs.getBool(PREFERENCE_THEME_ACCESSIBLE)) {
+                  Prefs.setString(PREFERENCE_THEME_COLOR, ThemeType.DARKACCESSIBLE.toString());
+                  setThemeColors(ThemeType.DARKACCESSIBLE);
+                } else {
+                  Prefs.setString(
+                      PREFERENCE_THEME_COLOR, ThemeType.DARK.toString());
+                  setThemeColors(ThemeType.DARK);
+                }
               } else {
-                Prefs.setString(PREFERENCE_THEME_COLOR, ThemeType.LIGHT.toString());
-                setThemeColors(ThemeType.LIGHT);
+                if (Prefs.getBool(PREFERENCE_THEME_ACCESSIBLE)) {
+                  Prefs.setString(PREFERENCE_THEME_COLOR, ThemeType.LIGHTACCESSIBLE.toString());
+                  setThemeColors(ThemeType.LIGHTACCESSIBLE);
+                  setThemeColors(ThemeType.LIGHTACCESSIBLE);
+                } else {
+                  Prefs.setString(PREFERENCE_THEME_COLOR, ThemeType.LIGHT.toString());
+                  setThemeColors(ThemeType.LIGHT);
+                }
               }
-
+              AppBuilder.of(context).rebuild();
+            });
+          },
+        ),
+        GCWOnOffSwitch(
+          title: "Barrierefrei", // todo i18n it
+          value: Prefs.getBool(PREFERENCE_THEME_ACCESSIBLE),
+          onChanged: (value) {
+            setState(() {
+              Prefs.setBool(PREFERENCE_THEME_ACCESSIBLE, value);
               AppBuilder.of(context).rebuild();
             });
           },
