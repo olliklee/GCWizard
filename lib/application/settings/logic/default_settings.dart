@@ -296,6 +296,11 @@ void _initDefaultSettings(PreferencesInitMode mode, {String reinitSinglePreferen
     Prefs.setString(PREFERENCE_THEME_COLOR, ThemeType.DARK.toString());
   }
 
+  if (reinitSinglePreference == PREFERENCE_THEME_ACCESSIBLE || _reinitAll ||
+      Prefs.get(PREFERENCE_THEME_ACCESSIBLE) == null) {
+    Prefs.setBool(PREFERENCE_THEME_ACCESSIBLE, false);
+  }
+
   if (reinitSinglePreference == PREFERENCE_THEME_FONT_SIZE ||
       _reinitAll ||
       Prefs.get(PREFERENCE_THEME_FONT_SIZE) == null) {
