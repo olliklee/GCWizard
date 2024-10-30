@@ -75,8 +75,9 @@ class _GCWOnOffSwitchState extends State<GCWOnOffSwitch> {
                       Text(widget.title ?? '',
                           style: _currentValue
                               ? gcwTextStyle()
+                              .apply(color: colors.dialogText())
                               : gcwTextStyle()
-                              .apply(color: colors.inactive())),
+                              .apply(color: colors.checkBoxActiveColor())),
                     ],
                   ),
                 ),

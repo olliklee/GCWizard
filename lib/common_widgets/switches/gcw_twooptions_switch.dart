@@ -31,11 +31,24 @@ class GCWTwoOptionsSwitch extends StatefulWidget {
 }
 
 class _GCWTwoOptionsSwitchState extends State<GCWTwoOptionsSwitch> {
+  late GCWSwitchPosition _currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentValue = widget.value ?? GCWSwitchPosition.left;
+  }
+
+  void _updateValue(GCWSwitchPosition newValue) {
+    setState(() {
+      _currentValue = newValue;
+      widget.onChanged(_currentValue);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var _currentValue = widget.value ?? GCWSwitchPosition.left;
-    ThemeColors colors = themeColors();
-
+    final colors = themeColors();
     var textStyle = gcwTextStyle();
     if (widget.alternativeColor) textStyle = textStyle.copyWith(color: colors.dialogText());
 
