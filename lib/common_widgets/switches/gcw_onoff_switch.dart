@@ -47,11 +47,7 @@ class _GCWOnOffSwitchState extends State<GCWOnOffSwitch> {
     final colors = themeColors();
 
     return Container(
-      padding: const EdgeInsets.all(2.0),
-      // decoration: BoxDecoration(
-      //   border: Border.all(color: colors.inActive().withOpacity(0.2)),
-      //   borderRadius: BorderRadius.circular(6.0),
-      // ),
+      padding: const EdgeInsets.symmetric(horizontal: 2.0),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -79,9 +75,8 @@ class _GCWOnOffSwitchState extends State<GCWOnOffSwitch> {
                       Text(widget.title ?? '',
                           style: _currentValue
                               ? gcwTextStyle()
-                              .apply(color: colors.dialogText())
                               : gcwTextStyle()
-                              .apply(color: colors.checkBoxActiveColor())),
+                              .apply(color: colors.inActive())),
                     ],
                   ),
                 ),

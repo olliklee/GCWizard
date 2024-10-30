@@ -56,10 +56,10 @@ class _GCWTwoOptionsSwitchState extends State<GCWTwoOptionsSwitch> {
 
     return Container(
       padding: const EdgeInsets.all(6.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: colors.inActive().withOpacity(0.2)),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
+      // decoration: BoxDecoration(
+      //   border: Border.all(color: colors.inActive().withOpacity(0.2)),
+      //   borderRadius: BorderRadius.circular(8.0),
+      // ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -108,8 +108,8 @@ class _GCWTwoOptionsSwitchState extends State<GCWTwoOptionsSwitch> {
     final foregroundColor = isSelected ? colors.dialogText() : colors.mainFont();
 
     return Expanded(
-      child: TextButton(
-        style: TextButton.styleFrom(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
           padding: const EdgeInsets.symmetric(vertical: 12.0),
