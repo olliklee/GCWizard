@@ -76,7 +76,7 @@ class _GCWOnOffSwitchState extends State<GCWOnOffSwitch> {
                           style: _currentValue
                               ? gcwTextStyle()
                               : gcwTextStyle()
-                              .apply(color: colors.inActive())),
+                              .apply(color: colors.inactive())),
                     ],
                   ),
                 ),

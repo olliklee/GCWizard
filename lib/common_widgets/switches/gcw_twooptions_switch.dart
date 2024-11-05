@@ -104,7 +104,7 @@ class _GCWTwoOptionsSwitchState extends State<GCWTwoOptionsSwitch> {
     final colors = themeColors();
     final backgroundColor = isSelected
         ? colors.checkBoxCheckColor()
-        : colors.inActive().withOpacity(0.2);
+        : colors.inactive().withOpacity(0.2);
     final foregroundColor = isSelected ? colors.dialogText() : colors.mainFont();
 
     return Expanded(
