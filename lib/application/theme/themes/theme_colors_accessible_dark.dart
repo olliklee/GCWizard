@@ -42,17 +42,17 @@ class _ThemeColorsDarkAccessible extends ThemeColors {
 
   @override
   Color dialog() {
-    return Colors.orangeAccent.shade700; // Dunklere Akzentfarbe für Kontrast
+    return Colors.orangeAccent.shade700;
   }
 
   @override
   Color dialogText() {
-    return Colors.white; // Höherer Kontrast gegen dunkleren Hintergrund
+    return Colors.black;
   }
 
   @override
   Color primaryBackground() {
-    return const Color(0xFF282828); // Dezent dunkler für Kontrast zu Text
+    return const Color(0xFF282828);
   }
 
   @override
@@ -62,7 +62,7 @@ class _ThemeColorsDarkAccessible extends ThemeColors {
 
   @override
   Color textFieldHintText() {
-    return const Color.fromRGBO(200, 200, 200, 1.0); // Helleres Grau für bessere Lesbarkeit
+    return const Color.fromRGBO(200, 200, 200, 1.0);
   }
 
   @override
@@ -87,7 +87,7 @@ class _ThemeColorsDarkAccessible extends ThemeColors {
 
   @override
   Color switchTrack2() {
-    return secondary().withOpacity(0.7); // Erhöhte Deckkraft für Sichtbarkeit
+    return secondary().withOpacity(0.7);
   }
 
   @override
@@ -105,7 +105,7 @@ class _ThemeColorsDarkAccessible extends ThemeColors {
 
   @override
   Color checkBoxCheckColor() {
-    return Colors.yellowAccent; // Auffällige Farbe für bessere Erkennbarkeit
+    return Colors.yellowAccent;
   }
 
   @override
@@ -123,7 +123,7 @@ class _ThemeColorsDarkAccessible extends ThemeColors {
     if (states.contains(WidgetState.disabled)) {
       return secondary().withOpacity(0.5);
     }
-    return secondary().withOpacity(0.7); // Leicht erhöhte Sichtbarkeit
+    return secondary().withOpacity(0.7);
   }
 
   @override
@@ -133,12 +133,12 @@ class _ThemeColorsDarkAccessible extends ThemeColors {
 
   @override
   Color gridBackground() {
-    return const Color.fromARGB(255, 70, 70, 70); // Etwas dunkler für Klarheit
+    return const Color.fromARGB(255, 70, 70, 70);
   }
 
   @override
   Color hyperLinkText() {
-    return Colors.cyanAccent; // Auffälligere Farbe für Links
+    return Colors.orangeAccent; // Auffälligere Farbe für Links
   }
 
   @override
