@@ -21,7 +21,7 @@ class _ThemeColorsDarkAccessible extends ThemeColors {
   }
 
   @override
-  Color inActive() {
+  Color inactive() {
     return Colors.grey.shade600; // Dunkleres Grau für besseren Kontrast
   }
 
