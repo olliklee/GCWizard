@@ -1,0 +1,240 @@
+import 'package:flutter/material.dart';
+import 'package:gc_wizard/application/tools/tool_licenses/widget/tool_license_types.dart';
+
+// v0.1
+
+void main() {
+  runApp(const SymbolTableApp());
+}
+
+class SymbolTableApp extends StatelessWidget {
+  const SymbolTableApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Symbol Table Generator',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const SymbolTableForm(),
+    );
+  }
+}
+
+class SymbolTableForm extends StatefulWidget {
+  const SymbolTableForm({super.key});
+
+  @override
+  _SymbolTableFormState createState() => _SymbolTableFormState();
+}
+
+class _SymbolTableFormState extends State<SymbolTableForm> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _folderController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _searchStringControllerEN = TextEditingController();
+  final _searchStringControllerCOM = TextEditingController();
+  final _authorController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _sourceURLController = TextEditingController();
+  final _customCommentController = TextEditingController();
+  String _output = "";
+
+  String toSnakeCase(String text) {
+    text = text.replaceAll(RegExp(r'[^\w\s]'), ' ');
+    text = text.replaceAllMapped(RegExp(r'(?<!^)(?=[A-Z])'), (match) => '_').toLowerCase();
+    text = text.replaceAll(RegExp(r'\s+'), '_');
+    return text.replaceAll(RegExp(r'_+'), '_').trim();
+  }
+
+  var licensesList = ToolLicenseType.values;
+  var licensesUseList = ToolLicenseUseType.values;
+
+  ToolLicenseType? _selectedLicenseType;
+  ToolLicenseUseType? _selectedLicenseUseType;
+
+  void _generateOutput() {
+
+    final name = _nameController.text;
+    var folderName = _folderController.text;
+    final description = _descriptionController.text;
+    final searchStringEN = _searchStringControllerEN.text.toLowerCase();
+    final searchStringCOM = _searchStringControllerCOM.text.toLowerCase();
+    final licenseInfo = {
+      'type': _selectedLicenseType?.toString(),
+      'author': _authorController.text,
+      'title': _titleController.text,
+      'sourceUrl': "https://${_sourceURLController.text}",
+      'useType': _selectedLicenseUseType?.toString(),
+      'customComment': _customCommentController.text,
+    };
+
+    setState(() {
+      folderName = folderName.isEmpty ? toSnakeCase(name) : folderName;
+
+      _output = '''
+# 1. Neues Verzeichnis in lib/tools/symbol_tables/_common/assets
+#   -> lib/tools/symbol_tables/_common/assets/<Symboltabelle>/
+#   -> Zip Datei in das Verzeichnis
+#   -> logo.png in das gleiche Verzeichnis
+
+# into file pubspec.yaml
+# ----------------------------------------------
+#  assets:
+    - lib/tools/symbol_tables/_common/assets/$folderName/
+
+# 2. Einpflegen der Symboltabelle in der englischen Sprachdatei
+
+# into file lib/application/i18n/assets/en.json
+# ----------------------------------------------
+  "symboltables_${folderName}_title": "$name",
+  "symboltables_${folderName}_description": "$description",
+
+# 3. Einpflegen der Suchstrings
+# Die Schlagwörter für die Suchstrings stehen im Verzeichnis lib/application/searchstrings/assets
+# in den Dateien common.json und en.json.
+# common.json enthält alle Schlagwörter, die sprachübergreifend gelten.
+# en.json enthält nur englische Schlagwörter. Die Übersetzung in Deutsch erfolgt zu einem späteren Zeitpunkt über crowdin.
+
+# into file lib/application/searchstrings/assets/en.json 
+# ----------------------------------------------
+  "symbol_$folderName": "$searchStringEN",
+  
+# into file lib/application/searchstrings/assets/common.json 
+# ----------------------------------------------
+  "symbol_$folderName": "$searchStringCOM",
+  
+# 4. Registrieren der Sprachdatei
+# Damit die Symboltabelle in der App gefunden werden kann, muss sie registriert werden.
+# Dies erfolgt in der Datei registry.dart im Verzeichnis lib/application.
+
+# into file lib/application/registry.dart
+# ----------------------------------------------
+  GCWSymbolTableTool(symbolKey: '$folderName', symbolSearchStrings: const [
+    'symbol_$folderName',
+  ], licenses: [
+    ${licenseInfo["type"]}(
+        context: context,
+        author: '${licenseInfo["author"]}',
+        title: '${licenseInfo["title"]}',
+        sourceUrl: '${licenseInfo["sourceUrl"]}',
+        licenseUseType: ${licenseInfo["useType"]}),
+        customComment: '${licenseInfo["customComment"]}'),
+  ]),
+''';
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Symbol Table Generator'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(labelText: 'Name of table'),
+              ),
+              TextFormField(
+                controller: _folderController,
+                decoration: const InputDecoration(labelText: 'Folder name'),
+              ),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(labelText: 'Short description'),
+              ),
+              TextFormField(
+                controller: _searchStringControllerEN,
+                decoration: const InputDecoration(labelText: 'Search strings EN'),
+              ),
+              TextFormField(
+                controller: _searchStringControllerCOM,
+                decoration: const InputDecoration(labelText: 'Search strings COMMON'),
+              ),
+              const Divider(),
+              const Text("License Information", style: TextStyle(fontWeight: FontWeight.bold)),
+
+              DropdownButtonFormField<ToolLicenseType>(
+                value: _selectedLicenseType,
+                decoration: InputDecoration(
+                  labelText: 'License Type',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                icon: const Icon(Icons.arrow_drop_down),
+                items: licensesList.map((ToolLicenseType license) {
+                  return DropdownMenuItem<ToolLicenseType>(
+                    value: license,
+                    child: Text(license.toString().split('.').last),
+                  );
+                }).toList(),
+                onChanged: (ToolLicenseType? newValue) {
+                  setState(() {
+                    _selectedLicenseType = newValue;
+                  });
+                },
+              ),
+
+              DropdownButtonFormField<ToolLicenseUseType>(
+                value: _selectedLicenseUseType,
+                decoration: InputDecoration(
+                  labelText: 'License Use Type',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                icon: const Icon(Icons.arrow_drop_down),
+                items: licensesUseList.map((ToolLicenseUseType license) {
+                  return DropdownMenuItem<ToolLicenseUseType>(
+                    value: license,
+                    child: Text(license.toString().split('.').last),
+                  );
+                }).toList(),
+                onChanged: (ToolLicenseUseType? newValue) {
+                  setState(() {
+                    _selectedLicenseUseType = newValue;
+                  });
+                },
+              ),
+
+              TextFormField(
+                controller: _authorController,
+                decoration: const InputDecoration(labelText: 'Author'),
+              ),
+              TextFormField(
+                controller: _titleController,
+                decoration: const InputDecoration(labelText: 'Title'),
+              ),
+              TextFormField(
+                controller: _sourceURLController,
+                decoration: const InputDecoration(labelText: 'Source URL (without https://)'),
+              ),
+              TextFormField(
+                controller: _customCommentController,
+                decoration: const InputDecoration(labelText: 'Custom Comment (e.g., CCA 4.0)'),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _generateOutput,
+                child: const Text('Generate Configuration'),
+              ),
+              const SizedBox(height: 20),
+              if (_output.isNotEmpty)
+                const Text("Generated Configuration:\n", style: TextStyle(fontWeight: FontWeight.bold)),
+              SelectableText(_output),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
