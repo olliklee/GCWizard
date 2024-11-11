@@ -13,7 +13,7 @@ class SymbolTableApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Symbol Table Generator',
+      title: 'Symbol Table Configuration Files Helper',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -40,7 +40,7 @@ class _SymbolTableFormState extends State<SymbolTableForm> {
   final _titleController = TextEditingController();
   final _sourceURLController = TextEditingController();
   final _customCommentController = TextEditingController();
-  String _output = "";
+  late String _output = "";
 
   String toSnakeCase(String text) {
     text = text.replaceAll(RegExp(r'[^\w\s]'), ' ');
@@ -75,43 +75,59 @@ class _SymbolTableFormState extends State<SymbolTableForm> {
       folderName = folderName.isEmpty ? toSnakeCase(name) : folderName;
 
       _output = '''
-# 1. Neues Verzeichnis in lib/tools/symbol_tables/_common/assets
-#   -> lib/tools/symbol_tables/_common/assets/<Symboltabelle>/
-#   -> Zip Datei in das Verzeichnis
-#   -> logo.png in das gleiche Verzeichnis
+// 1. Create a New Directory for Symbol Table Assets
+//    Path: lib/tools/symbol_tables/_common/assets/
+//     Structure:
+//      - Create a subdirectory: lib/tools/symbol_tables/_common/assets/$folderName/
+//      - Place the zip file with symbol assets in this directory.
+//      - Include a logo.png file in the same directory.
+// ----------------------------------------------
 
-# into file pubspec.yaml
-# ----------------------------------------------
-#  assets:
+
+// 2. Add Symbol Table to the pubspec.yaml File
+//    File: pubspec.yaml
+// ----------------------------------------------
+// assets:
+/* 
     - lib/tools/symbol_tables/_common/assets/$folderName/
+*/
 
-# 2. Einpflegen der Symboltabelle in der englischen Sprachdatei
 
-# into file lib/application/i18n/assets/en.json
-# ----------------------------------------------
+// 3. Integrate Symbol Table into English Language File
+//    File: lib/application/i18n/assets/en.json
+// ----------------------------------------------
+/*
   "symboltables_${folderName}_title": "$name",
   "symboltables_${folderName}_description": "$description",
+*/
 
-# 3. Einpflegen der Suchstrings
-# Die Schlagwörter für die Suchstrings stehen im Verzeichnis lib/application/searchstrings/assets
-# in den Dateien common.json und en.json.
-# common.json enthält alle Schlagwörter, die sprachübergreifend gelten.
-# en.json enthält nur englische Schlagwörter. Die Übersetzung in Deutsch erfolgt zu einem späteren Zeitpunkt über crowdin.
 
-# into file lib/application/searchstrings/assets/en.json 
-# ----------------------------------------------
+// 4. Add Search Strings
+//    The search strings are located in the files common.json and en.json within lib/application/searchstrings/assets/.
+//    common.json contains general, language-independent search strings.
+//    en.json contains only English-specific search strings. Other translations will be added later via Crowdin.
+//
+//    File: lib/application/searchstrings/assets/en.json
+// ----------------------------------------------
+/*
   "symbol_$folderName": "$searchStringEN",
-  
-# into file lib/application/searchstrings/assets/common.json 
-# ----------------------------------------------
-  "symbol_$folderName": "$searchStringCOM",
-  
-# 4. Registrieren der Sprachdatei
-# Damit die Symboltabelle in der App gefunden werden kann, muss sie registriert werden.
-# Dies erfolgt in der Datei registry.dart im Verzeichnis lib/application.
+*/
 
-# into file lib/application/registry.dart
-# ----------------------------------------------
+//    File: lib/application/searchstrings/assets/common.json
+//    ----------------------------------------------
+/*
+  "symbol_$folderName": "$searchStringCOM",
+*/
+
+
+// 5. Register the Symbol Table Language File
+//     Delete 
+//     Purpose: Ensure the symbol table is recognized in the app.
+//
+//     File: lib/application/registry.dart
+//    
+// ----------------------------------------------
+/*
   GCWSymbolTableTool(symbolKey: '$folderName', symbolSearchStrings: const [
     'symbol_$folderName',
   ], licenses: [
@@ -123,6 +139,7 @@ class _SymbolTableFormState extends State<SymbolTableForm> {
         licenseUseType: ${licenseInfo["useType"]}),
         customComment: '${licenseInfo["customComment"]}'),
   ]),
+*/
 ''';
     });
   }
@@ -131,107 +148,111 @@ class _SymbolTableFormState extends State<SymbolTableForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Symbol Table Generator'),
+        title: const Text('Symbol Table Configuration Files Helper'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Name of table'),
-              ),
-              TextFormField(
-                controller: _folderController,
-                decoration: const InputDecoration(labelText: 'Folder name'),
-              ),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(labelText: 'Short description'),
-              ),
-              TextFormField(
-                controller: _searchStringControllerEN,
-                decoration: const InputDecoration(labelText: 'Search strings EN'),
-              ),
-              TextFormField(
-                controller: _searchStringControllerCOM,
-                decoration: const InputDecoration(labelText: 'Search strings COMMON'),
-              ),
-              const Divider(),
-              const Text("License Information", style: TextStyle(fontWeight: FontWeight.bold)),
-
-              DropdownButtonFormField<ToolLicenseType>(
-                value: _selectedLicenseType,
-                decoration: InputDecoration(
-                  labelText: 'License Type',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
+      body: ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 600),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(labelText: 'Name of table'),
                 ),
-                icon: const Icon(Icons.arrow_drop_down),
-                items: licensesList.map((ToolLicenseType license) {
-                  return DropdownMenuItem<ToolLicenseType>(
-                    value: license,
-                    child: Text(license.toString().split('.').last),
-                  );
-                }).toList(),
-                onChanged: (ToolLicenseType? newValue) {
-                  setState(() {
-                    _selectedLicenseType = newValue;
-                  });
-                },
-              ),
-
-              DropdownButtonFormField<ToolLicenseUseType>(
-                value: _selectedLicenseUseType,
-                decoration: InputDecoration(
-                  labelText: 'License Use Type',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
+                TextFormField(
+                  controller: _folderController,
+                  decoration: const InputDecoration(labelText: 'Folder name'),
                 ),
-                icon: const Icon(Icons.arrow_drop_down),
-                items: licensesUseList.map((ToolLicenseUseType license) {
-                  return DropdownMenuItem<ToolLicenseUseType>(
-                    value: license,
-                    child: Text(license.toString().split('.').last),
-                  );
-                }).toList(),
-                onChanged: (ToolLicenseUseType? newValue) {
-                  setState(() {
-                    _selectedLicenseUseType = newValue;
-                  });
-                },
-              ),
+                TextFormField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(labelText: 'Short description'),
+                ),
+                TextFormField(
+                  controller: _searchStringControllerEN,
+                  decoration: const InputDecoration(labelText: 'Search strings EN'),
+                ),
+                TextFormField(
+                  controller: _searchStringControllerCOM,
+                  decoration: const InputDecoration(labelText: 'Search strings COMMON'),
+                ),
+                const Divider(),
+                const Text("License Information", style: TextStyle(fontWeight: FontWeight.bold)),
 
-              TextFormField(
-                controller: _authorController,
-                decoration: const InputDecoration(labelText: 'Author'),
-              ),
-              TextFormField(
-                controller: _titleController,
-                decoration: const InputDecoration(labelText: 'Title'),
-              ),
-              TextFormField(
-                controller: _sourceURLController,
-                decoration: const InputDecoration(labelText: 'Source URL (without https://)'),
-              ),
-              TextFormField(
-                controller: _customCommentController,
-                decoration: const InputDecoration(labelText: 'Custom Comment (e.g., CCA 4.0)'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _generateOutput,
-                child: const Text('Generate Configuration'),
-              ),
-              const SizedBox(height: 20),
-              if (_output.isNotEmpty)
-                const Text("Generated Configuration:\n", style: TextStyle(fontWeight: FontWeight.bold)),
-              SelectableText(_output),
-            ],
+                DropdownButtonFormField<ToolLicenseType>(
+                  value: _selectedLicenseType,
+                  decoration: InputDecoration(
+                    labelText: 'License Type',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  icon: const Icon(Icons.arrow_drop_down),
+                  items: licensesList.map((ToolLicenseType license) {
+                    return DropdownMenuItem<ToolLicenseType>(
+                      value: license,
+                      child: Text(license.toString().split('.').last),
+                    );
+                  }).toList(),
+                  onChanged: (ToolLicenseType? newValue) {
+                    setState(() {
+                      _selectedLicenseType = newValue;
+                    });
+                  },
+                ),
+
+                DropdownButtonFormField<ToolLicenseUseType>(
+                  value: _selectedLicenseUseType,
+                  decoration: InputDecoration(
+                    labelText: 'License Use Type',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  icon: const Icon(Icons.arrow_drop_down),
+                  items: licensesUseList.map((ToolLicenseUseType license) {
+                    return DropdownMenuItem<ToolLicenseUseType>(
+                      value: license,
+                      child: Text(license.toString().split('.').last),
+                    );
+                  }).toList(),
+                  onChanged: (ToolLicenseUseType? newValue) {
+                    setState(() {
+                      _selectedLicenseUseType = newValue;
+                    });
+                  },
+                ),
+
+                TextFormField(
+                  controller: _authorController,
+                  decoration: const InputDecoration(labelText: 'Author'),
+                ),
+                TextFormField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(labelText: 'Title'),
+                ),
+                TextFormField(
+                  controller: _sourceURLController,
+                  decoration: const InputDecoration(labelText: 'Source URL (without https://)'),
+                ),
+                TextFormField(
+                  controller: _customCommentController,
+                  decoration: const InputDecoration(labelText: 'Custom Comment (e.g., CCA 4.0)'),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _generateOutput,
+                  child: const Text('Generate Configuration'),
+                ),
+                const SizedBox(height: 20),
+                if (_output.isNotEmpty)
+                  const Text("Generated Configuration:\n", style: TextStyle(fontWeight: FontWeight.bold)),
+                SelectableText(_output),
+              ],
+            ),
           ),
         ),
       ),
