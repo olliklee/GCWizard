@@ -131,12 +131,12 @@ class _SymbolTableFormState extends State<SymbolTableForm> {
   GCWSymbolTableTool(symbolKey: '$folderName', symbolSearchStrings: const [
     'symbol_$folderName',
   ], licenses: [
-    ${licenseInfo["type"]}(
+    ToolLicenseOnlineArticle(
         context: context,
         author: '${licenseInfo["author"]}',
         title: '${licenseInfo["title"]}',
         sourceUrl: '${licenseInfo["sourceUrl"]}',
-        licenseUseType: ${licenseInfo["useType"]}),
+        licenseType: ${licenseInfo["type"]}(
         customComment: '${licenseInfo["customComment"]}'),
   ]),
 */
