@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:gc_wizard/application/tools/tool_licenses/widget/tool_license_types.dart';
 
-// v0.1
+// v0.2
 
 void main() {
   runApp(const SymbolTableApp());
 }
+
+
+const List<String> licensesList = [
+  'ToolLicenseOfflineBook',
+  'ToolLicenseOnlineBook',
+  'ToolLicenseOfflineArticle',
+  'ToolLicenseOnlineArticle',
+  'ToolLicenseCodeLibrary',
+  'ToolLicensePortedCode',
+  'ToolLicenselmage',
+  'ToolLicenseFont',
+  'ToolLicenseFile'];
+
+List<ToolLicenseType> licensesTypeListe = ToolLicenseType.values;
+List<ToolLicenseUseType> licensesUseList = ToolLicenseUseType.values;
 
 class SymbolTableApp extends StatelessWidget {
   const SymbolTableApp({super.key});
@@ -49,19 +64,17 @@ class _SymbolTableFormState extends State<SymbolTableForm> {
     return text.replaceAll(RegExp(r'_+'), '_').trim();
   }
 
-  var licensesList = ToolLicenseType.values;
-  var licensesUseList = ToolLicenseUseType.values;
-
+  String? _selectedLicense;
   ToolLicenseType? _selectedLicenseType;
   ToolLicenseUseType? _selectedLicenseUseType;
 
   void _generateOutput() {
-
     final name = _nameController.text;
     var folderName = _folderController.text;
     final description = _descriptionController.text;
     final searchStringEN = _searchStringControllerEN.text.toLowerCase();
     final searchStringCOM = _searchStringControllerCOM.text.toLowerCase();
+    final license = _selectedLicense;
     final licenseInfo = {
       'type': _selectedLicenseType?.toString(),
       'author': _authorController.text,
@@ -131,15 +144,17 @@ class _SymbolTableFormState extends State<SymbolTableForm> {
   GCWSymbolTableTool(symbolKey: '$folderName', symbolSearchStrings: const [
     'symbol_$folderName',
   ], licenses: [
-    ToolLicenseOnlineArticle(
+    $license(
         context: context,
         author: '${licenseInfo["author"]}',
         title: '${licenseInfo["title"]}',
         sourceUrl: '${licenseInfo["sourceUrl"]}',
-        licenseType: ${licenseInfo["type"]}(
+        licenseType: ${licenseInfo["type"]},
         customComment: '${licenseInfo["customComment"]}'),
   ]),
 */
+
+//     Delete unused content
 ''';
     });
   }
@@ -182,8 +197,9 @@ class _SymbolTableFormState extends State<SymbolTableForm> {
                 const Divider(),
                 const Text("License Information", style: TextStyle(fontWeight: FontWeight.bold)),
 
-                DropdownButtonFormField<ToolLicenseType>(
-                  value: _selectedLicenseType,
+                DropdownButtonFormField<String>(
+                  value: _selectedLicense,
+                  padding: const EdgeInsets.all(10.0),
                   decoration: InputDecoration(
                     labelText: 'License Type',
                     border: OutlineInputBorder(
@@ -191,7 +207,30 @@ class _SymbolTableFormState extends State<SymbolTableForm> {
                     ),
                   ),
                   icon: const Icon(Icons.arrow_drop_down),
-                  items: licensesList.map((ToolLicenseType license) {
+                  items: licensesList.map((license) {
+                    return DropdownMenuItem<String>(
+                      value: license,
+                      child: Text(license), // Display the license name
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedLicense = newValue;
+                    });
+                  },
+                ),
+
+                DropdownButtonFormField<ToolLicenseType>(
+                  value: _selectedLicenseType,
+                  padding: const EdgeInsets.all(10.0),
+                  decoration: InputDecoration(
+                    labelText: 'License Type',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  icon: const Icon(Icons.arrow_drop_down),
+                  items: licensesTypeListe.map((ToolLicenseType license) {
                     return DropdownMenuItem<ToolLicenseType>(
                       value: license,
                       child: Text(license.toString().split('.').last),
@@ -206,6 +245,7 @@ class _SymbolTableFormState extends State<SymbolTableForm> {
 
                 DropdownButtonFormField<ToolLicenseUseType>(
                   value: _selectedLicenseUseType,
+                  padding: const EdgeInsets.all(10.0),
                   decoration: InputDecoration(
                     labelText: 'License Use Type',
                     border: OutlineInputBorder(
