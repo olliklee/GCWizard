@@ -12,6 +12,7 @@ import 'package:gc_wizard/utils/file_utils/file_utils.dart';
 import 'package:gc_wizard/utils/file_utils/gcw_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:gc_wizard/utils/sound_utils.dart';
 
 enum PlayerState { stopped, playing, paused }
 
@@ -206,8 +207,15 @@ class _GCWSoundPlayerState extends State<GCWSoundPlayer> {
     Directory tempDir = await getApplicationDocumentsDirectory();
     String tempPath = tempDir.path;
     String suffix = fileExtension(widget.file.fileType);
-    print(suffix);
-    var filePath = tempPath + '/${advancedPlayer.playerId}.$suffix'; // same mp3 or wav (it must be a soundfile suffix not .tmp)
+    var filePath = tempPath + '/${advancedPlayer.playerId}.mp3';
+
+    if (suffix.toLowerCase() != 'mp3') {
+      final _ = await convertAudio(
+        inputAudioPath: widget.file.path!,
+        outputAudioPath: filePath,
+      );
+    }
+
     return File(filePath).writeAsBytes(buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 

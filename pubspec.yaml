@@ -66,6 +66,7 @@ dependencies:
   utility: ^1.0.3
   week_of_year: ^2.0.0
   xml: ^6.3.0
+  ffmpeg_kit_flutter_audio: ^6.0.3
 
 dev_dependencies:
   flutter_test:
