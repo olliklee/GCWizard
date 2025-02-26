@@ -20,13 +20,15 @@ class WaypointType {
   static const WaypointType VIRTUAL = WaypointType._("Virtual Stage");
   static const WaypointType PHYSICAL = WaypointType._("Physical Stage");
   static const WaypointType REFERENCE = WaypointType._("Reference Point");
+  static const WaypointType FINAL = WaypointType._("Final Location");
 
   static const List<WaypointType> values = [
     OTHER,
     PARKING,
     VIRTUAL,
     PHYSICAL,
-    REFERENCE
+    REFERENCE,
+    FINAL,
   ];
 
   @override
@@ -39,42 +41,48 @@ class WaypointType {
 
     return values.firstWhere(
           (e) => e.type.toLowerCase() == processedValue.toLowerCase(),
-      orElse: () {
-        return OTHER;
-      },
+      orElse: () => OTHER,
     );
   }
 
-  Color getColor() {
-    switch (this) {
-      case WaypointType.PARKING:
-        return COLOR_MAP_GPX_IMPORT_PARKING;
-      case WaypointType.VIRTUAL:
-        return COLOR_MAP_GPX_IMPORT_VIRTUALSTAGE;
-      case WaypointType.PHYSICAL:
-        return COLOR_MAP_GPX_IMPORT_PHYSICALSTAGE;
-      case WaypointType.REFERENCE:
-        return COLOR_MAP_GPX_IMPORT_REFERENCEPOINT;
-      default:
-        return COLOR_MAP_POINT;
-    }
-  }
+  // icon not yet used
+  static final Map<WaypointType, Map<String, dynamic>> _waypointDetails = {
+    OTHER: {
+      'name': "Other",
+      'color': COLOR_MAP_POINT,
+      'icon': const Icon(Icons.location_searching_outlined),
+    },
+    PARKING: {
+      'name': "Parking Area",
+      'color': COLOR_MAP_GPX_IMPORT_PARKING,
+      'icon': const Icon(Icons.local_parking),
+    },
+    VIRTUAL: {
+      'name': "Virtual Stage",
+      'color': COLOR_MAP_GPX_IMPORT_VIRTUALSTAGE,
+      'icon': const Icon(Icons.location_pin),
+    },
+    PHYSICAL: {
+      'name': "Physical Stage",
+      'color': COLOR_MAP_GPX_IMPORT_PHYSICALSTAGE,
+      'icon': const Icon(Icons.location_pin),
+    },
+    REFERENCE: {
+      'name': "Reference Point",
+      'color': COLOR_MAP_GPX_IMPORT_REFERENCEPOINT,
+      'icon': const Icon(Icons.star_border),
+    },
+    FINAL: {
+      'name': "Final Location",
+      'color': COLOR_MAP_GPX_IMPORT_FINAL,
+      'icon': const Icon(Icons.flag),
+    },
+  };
 
-  Icon getIcon() {
-    switch (this) {
-      case WaypointType.PARKING:
-        return const Icon(Icons.local_parking);
-      case WaypointType.VIRTUAL:
-        return const Icon(Icons.location_pin);
-      case WaypointType.PHYSICAL:
-        return const Icon(Icons.location_pin);
-      case WaypointType.REFERENCE:
-        return const Icon(Icons.star_border);
-      default:
-        return const Icon(Icons.location_searching_outlined); // Default-Icon für "OTHER"
-    }
-  }
-
+  // getter
+  String get name => _waypointDetails[this]?['name'] as String? ?? "Unknown";
+  Color get color => _waypointDetails[this]?['color'] as Color? ?? Colors.black;
+  Icon get icon => _waypointDetails[this]?['icon'] as Icon? ?? const Icon(Icons.help_outline);
 }
 
 class GCWMapPoint {

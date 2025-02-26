@@ -143,6 +143,7 @@ class _GpxReader {
       var name = xmlElement.getElement('name')?.innerText ?? '';
       var type = xmlElement.getElement('type')?.innerText ?? '';
       var wpType = WaypointType.fromString(type);
+      print('$type -> $wpType');
 
       if (name.isNotEmpty) {
         wpt.markerText = '$name\n${type.replaceAll(r'[Waypoint|Geocache]|', '')}';
@@ -151,11 +152,17 @@ class _GpxReader {
       }
 
       if (type.isNotEmpty) {
-        wpt.color = wpType.getColor();
+        wpt.color = wpType.color;
         wpt.type = wpType;
       } else {
         wpt.color = COLOR_MAP_POINT;
         wpt.type = WaypointType.OTHER;
+      }
+
+      if (wpt.type == WaypointType.FINAL  // ignores c:geo Final (0.0, 0.0) for unsolved caches
+          && wpt.point.latitude == (0.0)
+          && wpt.point.longitude == (0.0)) {
+        return null;
       }
 
       return wpt;
