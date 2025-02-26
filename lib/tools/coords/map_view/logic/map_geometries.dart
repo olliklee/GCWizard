@@ -10,7 +10,72 @@ import 'package:gc_wizard/tools/coords/waypoint_projection/logic/projection.dart
 import 'package:latlong2/latlong.dart';
 import 'package:uuid/uuid.dart';
 
-enum WaypointType {OTHER, PARKING, VIRTUAL, PHYSICAL, REFERENCE}
+class WaypointType {
+  final String type;
+
+  const WaypointType._(this.type);
+
+  static const WaypointType OTHER = WaypointType._("Other");
+  static const WaypointType PARKING = WaypointType._("Parking Area");
+  static const WaypointType VIRTUAL = WaypointType._("Virtual Stage");
+  static const WaypointType PHYSICAL = WaypointType._("Physical Stage");
+  static const WaypointType REFERENCE = WaypointType._("Reference Point");
+
+  static const List<WaypointType> values = [
+    OTHER,
+    PARKING,
+    VIRTUAL,
+    PHYSICAL,
+    REFERENCE
+  ];
+
+  @override
+  String toString() => type;
+
+  static WaypointType fromString(String? value) {
+    if (value == null) return OTHER;
+
+    String processedValue = value.contains('|') ? value.split('|').last.trim() : value;
+
+    return values.firstWhere(
+          (e) => e.type.toLowerCase() == processedValue.toLowerCase(),
+      orElse: () {
+        return OTHER;
+      },
+    );
+  }
+
+  Color getColor() {
+    switch (this) {
+      case WaypointType.PARKING:
+        return COLOR_MAP_GPX_IMPORT_PARKING;
+      case WaypointType.VIRTUAL:
+        return COLOR_MAP_GPX_IMPORT_VIRTUALSTAGE;
+      case WaypointType.PHYSICAL:
+        return COLOR_MAP_GPX_IMPORT_PHYSICALSTAGE;
+      case WaypointType.REFERENCE:
+        return COLOR_MAP_GPX_IMPORT_REFERENCEPOINT;
+      default:
+        return COLOR_MAP_POINT;
+    }
+  }
+
+  Icon getIcon() {
+    switch (this) {
+      case WaypointType.PARKING:
+        return const Icon(Icons.local_parking);
+      case WaypointType.VIRTUAL:
+        return const Icon(Icons.location_pin);
+      case WaypointType.PHYSICAL:
+        return const Icon(Icons.location_pin);
+      case WaypointType.REFERENCE:
+        return const Icon(Icons.star_border);
+      default:
+        return const Icon(Icons.location_searching_outlined); // Default-Icon für "OTHER"
+    }
+  }
+
+}
 
 class GCWMapPoint {
   String? uuid;
