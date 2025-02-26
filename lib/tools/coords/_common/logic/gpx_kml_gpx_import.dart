@@ -151,7 +151,7 @@ class _GpxReader {
       }
 
       if (type.isNotEmpty) {
-        wpt.color = wpType!.getColor();
+        wpt.color = wpType.getColor();
         wpt.type = wpType;
       } else {
         wpt.color = COLOR_MAP_POINT;
