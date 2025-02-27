@@ -163,7 +163,7 @@ class _GpxReader {
           && wpt.point.longitude == (0.0)) {
         return null;
       }
-
+      wpt.isEditable = false;
       return wpt;
     }
     return null;

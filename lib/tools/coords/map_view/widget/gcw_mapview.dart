@@ -54,7 +54,7 @@ import 'package:prefs/prefs.dart';
 part 'package:gc_wizard/tools/coords/map_view/widget/scalebar/gcw_mapview_scalebar.dart';
 part 'package:gc_wizard/tools/coords/map_view/widget/scalebar/gcw_mapview_scalebar_painter.dart';
 
-enum MapMarkerIcon {CROSSLINES, LOCATION}
+enum MapMarkerIcon {CROSSLINES, LOCATION, CUSTOM}
 
 enum _LayerType { OPENSTREETMAP_MAPNIK, MAPBOX_SATELLITE }
 
@@ -548,26 +548,27 @@ class _GCWMapViewState extends State<GCWMapView> {
     }
 
     return points.map((_point) {
-      var icon = Icon(
-        iconFromMapMarkerValues(_markerIcon),
-        size: 25.0,
-        color: _point.color,
-        shadows: const [
-          Shadow(
-            color: COLOR_MAP_POINT_OUTLINE,
-            blurRadius: 5.0,
-          ),
-        ]
-      );
+      var icon = _point.type?.icon;
+      // var icon = Icon(
+      //   iconFromMapMarkerValues(_markerIcon),
+      //   size: 25.0,
+      //   color: _point.color,
+      //   shadows: const [
+      //     Shadow(
+      //       color: COLOR_MAP_POINT_OUTLINE,
+      //       blurRadius: 5.0,
+      //     ),
+      //   ]
+      // );
 
-      var marker = widget.isEditable && _point.isEditable ? _createDragableIcon(_point, icon) : icon;
+      var marker = widget.isEditable && _point.isEditable ? _createDragableIcon(_point, icon!) : icon;
 
       return _GCWMarker(
           coordinateDescription: _buildPopupCoordinateDescription(_point),
           width: 25,
           height: _markerIcon == MapMarkerIcon.CROSSLINES ? 24.5 : 23,
           mapPoint: _point,
-          child: marker,
+          child: marker ?? Container(),
           alignment: _mapMarkerAlignment(_markerIcon)
       );
     }).toList();
@@ -1235,6 +1236,7 @@ class _GCWMapViewState extends State<GCWMapView> {
     switch (markerValue) {
       case MapMarkerIcon.CROSSLINES: return Icons.location_disabled;
       case MapMarkerIcon.LOCATION: return Icons.location_off;
+      case MapMarkerIcon.CUSTOM: return Icons.location_disabled;
     }
   }
 
@@ -1242,6 +1244,7 @@ class _GCWMapViewState extends State<GCWMapView> {
     switch (markerValue) {
       case MapMarkerIcon.CROSSLINES: return Icons.location_on;
       case MapMarkerIcon.LOCATION: return Icons.my_location;
+      case MapMarkerIcon.CUSTOM: return Icons.difference_outlined;
     }
   }
 
@@ -1249,6 +1252,7 @@ class _GCWMapViewState extends State<GCWMapView> {
     switch (markerValue) {
       case MapMarkerIcon.CROSSLINES: return Alignment.center;
       case MapMarkerIcon.LOCATION: return Alignment.topCenter;
+      case MapMarkerIcon.CUSTOM: return Alignment.center;
     }
   }
 }
@@ -1304,6 +1308,7 @@ IconData iconFromMapMarkerValues(MapMarkerIcon markerValue) {
   switch (markerValue) {
     case MapMarkerIcon.CROSSLINES: return Icons.my_location;
     case MapMarkerIcon.LOCATION: return Icons.location_on;
+    case MapMarkerIcon.CUSTOM: return const IconData(0x0);
   }
 }
 

@@ -13,41 +13,68 @@ import 'package:uuid/uuid.dart';
 class WaypointType {
   final String type;
   final Color color;
-  final Icon icon;
+  final IconData _iconData;
 
   static const List<WaypointType> values = [
     OTHER,
-    MULTICACHE, UNKNOWNCACHE, TRADITIONAL, // todo: Traditional, Event, Virtual, ...
+    MULTICACHE, UNKNOWNCACHE, TRADITIONAL, LETTERBOXHYBRID,
+    WHERIGO, EARTH, VIRTUAL, CITO, WEBCAM, EVENT, LAB,
     PARKING, VIRTUAL,  PHYSICAL, REFERENCE, FINAL,
   ];
 
-  const WaypointType._(this.type, this.color, this.icon);
+  const WaypointType._(this.type, this.color, this._iconData);
+
+  Widget get icon => Icon(
+        _iconData,
+        size: 25,
+        color: color,
+        shadows: const [
+          Shadow(
+            color: COLOR_MAP_POINT_OUTLINE,
+            blurRadius: 5.0,
+          ),
+        ],
+      );
 
   static const WaypointType OTHER = WaypointType._(
-      "Other", COLOR_MAP_POINT, Icon(Icons.location_searching_outlined));
+      "Other", COLOR_MAP_POINT, Icons.location_searching_outlined);
   static const WaypointType MULTICACHE = WaypointType._(
-      "Multi-cache", COLOR_MAP_POINT, Icon(Icons.add_location_alt));
+      "Multi-cache", COLOR_MAP_POINT, Icons.add_location_alt);
   static const WaypointType UNKNOWNCACHE = WaypointType._(
-      "Unknown Cache", COLOR_MAP_POINT, Icon(Icons.question_mark));
+      "Unknown Cache", COLOR_MAP_POINT, Icons.question_mark);
   static const WaypointType TRADITIONAL = WaypointType._(
-      "Traditional Cache", COLOR_MAP_POINT, Icon(Icons.my_location));
+      "Traditional Cache", COLOR_MAP_POINT, Icons.my_location);
+  static const WaypointType LETTERBOXHYBRID = WaypointType._(
+      "Letterbox Hybrid", Colors.white60, Icons.attach_email_outlined);
+  static const WaypointType WHERIGO = WaypointType._(
+      "Wherigo Cache", COLOR_MAP_POINT, Icons.my_location);
+  static const WaypointType EARTH = WaypointType._(
+      "Earthcache", Colors.blue, Icons.public_outlined);
+
+  static const WaypointType CITO = WaypointType._(
+      "Cache In Trash Out Event", Colors.grey, Icons.recycling_outlined);
+  static const WaypointType WEBCAM = WaypointType._(
+      "Webcam Cache", COLOR_MAP_POINT, Icons.camera_alt_outlined);
+  static const WaypointType EVENT = WaypointType._(
+      "Event Cache", COLOR_MAP_POINT, Icons.event);
+  static const WaypointType LAB = WaypointType._(
+      "Adventure Lab", Colors.deepOrange, Icons.hourglass_bottom_outlined);
 
   static const WaypointType PARKING = WaypointType._(
-      "Parking Area", COLOR_MAP_GPX_IMPORT_PARKING, Icon(Icons.local_parking));
+      "Parking Area", COLOR_MAP_GPX_IMPORT_PARKING, Icons.local_parking);
   static const WaypointType VIRTUAL = WaypointType._(
-      "Virtual Stage", COLOR_MAP_GPX_IMPORT_VIRTUALSTAGE, Icon(Icons.location_pin));
+      "Virtual Stage", COLOR_MAP_GPX_IMPORT_VIRTUALSTAGE, Icons.location_pin);
   static const WaypointType PHYSICAL = WaypointType._(
-      "Physical Stage", COLOR_MAP_GPX_IMPORT_PHYSICALSTAGE, Icon(Icons.location_pin));
+      "Physical Stage", COLOR_MAP_GPX_IMPORT_PHYSICALSTAGE, Icons.location_pin);
   static const WaypointType REFERENCE = WaypointType._(
-      "Reference Point", COLOR_MAP_GPX_IMPORT_REFERENCEPOINT, Icon(Icons.star_border));
+      "Reference Point", COLOR_MAP_GPX_IMPORT_REFERENCEPOINT, Icons.star_border);
   static const WaypointType FINAL = WaypointType._(
-      "Final Location", COLOR_MAP_GPX_IMPORT_FINAL, Icon(Icons.flag));
+      "Final Location", COLOR_MAP_GPX_IMPORT_FINAL, Icons.flag);
 
   static WaypointType fromString(String? value) {
     if (value == null) return OTHER;
 
     String processedValue = value.contains('|') ? value.split('|').last.trim() : value;
-    print(processedValue);
     return values.firstWhere(
           (e) => e.type.toLowerCase() == processedValue.toLowerCase(),
       orElse: () => OTHER,
