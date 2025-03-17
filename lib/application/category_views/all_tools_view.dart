@@ -638,7 +638,7 @@ void _initStaticToolList() {
       className(const EquilateralTriangle()),
       className(const ESelection()),
       className(const FormatConverter()),
-      className(const FormulaSolverFormulaGroups()),
+      className(FormulaSolverFormulaGroups()),
       className(const FourteenSegments()),
       className(const Fox()),
       className(const Gade()),
@@ -845,7 +845,7 @@ void _initStaticToolList() {
     return [
       className(const CoordsSelection()),
       className(const CryptographySelection()),
-      className(const FormulaSolverFormulaGroups()),
+      className(FormulaSolverFormulaGroups()),
       className(const GamesSelection()),
       className(const GeneralCodebreakersSelection()),
       className(const ImagesAndFilesSelection()),
