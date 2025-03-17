@@ -20,7 +20,7 @@ class WordSearchResult {
   int get sumTotal => counts.values.reduce((a, b) => a + b);
 }
 
-WordSearchResult wordCountInMatrix(
+WordSearchResult wordCountMatrix(
     String matrixText,
     String word, {
       bool caseSensitive = false,
