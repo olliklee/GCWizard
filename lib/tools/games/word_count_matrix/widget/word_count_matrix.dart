@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gc_wizard/application/i18n/logic/app_localizations.dart';
 import 'package:gc_wizard/application/theme/theme.dart';
 import 'package:gc_wizard/application/theme/theme_colors.dart';
@@ -7,7 +6,6 @@ import 'package:gc_wizard/common_widgets/buttons/gcw_button.dart';
 import 'package:gc_wizard/common_widgets/buttons/gcw_iconbutton.dart';
 import 'package:gc_wizard/common_widgets/clipboard/gcw_clipboard.dart';
 import 'package:gc_wizard/common_widgets/dividers/gcw_text_divider.dart';
-import 'package:gc_wizard/common_widgets/dropdowns/gcw_dropdown.dart';
 import 'package:gc_wizard/common_widgets/gcw_expandable.dart';
 import 'package:gc_wizard/common_widgets/outputs/gcw_default_output.dart';
 import 'package:gc_wizard/common_widgets/switches/gcw_onoff_switch.dart';
@@ -23,7 +21,7 @@ class WordCountMatrix extends StatefulWidget {
 
 class _WordCountMatrixState extends State<WordCountMatrix> {
   late TextEditingController _inputController;
-  late TextEditingController _wordsController;
+  late TextEditingController _wordController;
 
   String _currentInput = '';
   String _currentWord = '';
@@ -37,20 +35,22 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
   var _currentOptionsExpanded = false;
 
   List<List<int>> _markerMatrix = [];
+  List<List<String>> _inputMatrix = [];
   Map<Directions, int> _countsPerDirection = {};
+  int _totalCount = 0;
 
   @override
   void initState() {
     super.initState();
 
     _inputController = TextEditingController(text: _currentInput);
-    _wordsController = TextEditingController(text: _currentWord);
+    _wordController = TextEditingController(text: _currentWord);
   }
 
   @override
   void dispose() {
     _inputController.dispose();
-    _wordsController.dispose();
+    _wordController.dispose();
     super.dispose();
   }
 
@@ -73,7 +73,7 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
         text: i18n(context, 'common_search'),
       ),
       GCWTextField(
-        controller: _wordsController,
+        controller: _wordController,
         onChanged: (text) {
           setState(() {
             _currentWord = text;
@@ -154,7 +154,7 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
             text: _countsPerDirection.isEmpty ? i18n(context, 'common_search') : i18n(context, 'word_search_search_more'),
             onPressed: () {
               setState(() {
-                _calcOutputFillGapMode();
+                _calcOutput();
               });
             },
           ),
@@ -179,7 +179,7 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
             onPressed: () {
               setState(() {
                 _markerMatrix = [];
-                _countsPerDirection = [];
+                _countsPerDirection = {};
               });
             },
           ),
@@ -189,17 +189,28 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
   }
 
   void _calcOutput() {
-    _markerMatrix = wordCountMatrix(_currentInput, _currentWord, flags: _currentSearchDirection).counts;
-    _countsPerDirection = normalizeAndSplitInputForView(_currentInput);
+    var result = wordCountMatrix(_currentInput, _currentWord, flags: _currentSearchDirection);
+    _markerMatrix = result.markerMatrix;
+    _inputMatrix = result.inputMatrix;
+    _countsPerDirection = result.counts;
+    _totalCount = result.sumTotal;
     setState(() {});
   }
 
   void _deleteMarkedLetters() {
-    if (_countsPerDirection.isEmpty) return;
-    if (_markerMatrix.isEmpty) return;
-    _countsPerDirection = fillSpaces(_countsPerDirection.join('\r\n'), _markerMatrix, _currentFillGapMode);
-    _markerMatrix = searchWordList(_countsPerDirection.join('\r\n'), '', 0, noSpaces: false);
-    setState(() {});
+    if (_totalCount == 0 || _markerMatrix.isEmpty) return;
+
+    for (int row = 0; row < _inputMatrix.length; row++) {
+      for (int col = 0; col < _inputMatrix[row].length; col++) {
+        if (_markerMatrix[row][col] != 0) {
+          _inputMatrix[row][col] = ' '; // Ersetze markierte Zeichen durch ein Leerzeichen
+        }
+      }
+    }
+
+    setState(() {
+      _calcOutput();
+    });
   }
 
   Widget _buildOutput() {
@@ -218,64 +229,61 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
       ),
       child: RichText(
         textAlign: TextAlign.center,
-        text: TextSpan(children: _buildRtfOutput(_countsPerDirection, _markerMatrix), style: gcwTextStyle()),
+        text: TextSpan(children: _buildRtfOutput(), style: gcwTextStyle()),
       ),
     );
   }
 
-  List<TextSpan> _buildRtfOutput(List<String> text, List<Uint8List> founds) {
-    var textSpan = <TextSpan>[];
+  List<TextSpan> _buildRtfOutput() {
+    List<TextSpan> textSpans = [];
 
-    if (text.isEmpty || text.first.isEmpty || founds.isEmpty || founds.first.isEmpty) return textSpan;
-    var lastColor = _getTextColorValue(founds.first.first);
-    var actText = '';
-
-    for (var row = 0; row < text.length; row++) {
-      if (row > 0) actText += '\n';
-      for (var column = 0; column < text[row].length; column++) {
-        var actColor = lastColor;
-        if (founds.length > row && founds[row].length > column) {
-          actColor = _getTextColorValue(founds[row][column]);
-        }
-        var lastEntry = (row == text.length - 1 && column == text[row].length - 1);
-        if (lastEntry || actColor != lastColor) {
-          if (lastEntry) {
-            if (actColor != lastColor) {
-              textSpan.add(_createTextSpan(actText, lastColor));
-              actText = '';
-              lastColor = actColor;
-            }
-            actText += text[row][column] + ' ';
-          }
-
-          textSpan.add(_createTextSpan(actText, lastColor));
-          actText = '';
-          lastColor = actColor;
-        }
-        actText += text[row][column] + ' ';
-      }
+    // Prüfen, ob der Eingabetext leer ist oder die Matrix nur Nullen enthält
+    if (_currentInput.isEmpty || _markerMatrix.every((row) => row.every((value) => value == 0))) {
+      return textSpans;
     }
-    return textSpan;
+
+    String currentText = '';
+    Color lastColor = _getTextColorValue(0); // Standardfarbe
+
+    for (int row = 0; row < _currentInput.length; row++) {
+      for (int col = 0; col < _currentInput[row].length; col++) {
+        String char = _currentInput[row][col]; // Aktuelles Zeichen
+        Color color = _getTextColorValue(_markerMatrix[row][col]); // Farbe aus der MarkerMatrix holen
+
+        // Falls sich die Farbe ändert, füge den bisherigen Text hinzu
+        if (color != lastColor && currentText.isNotEmpty) {
+          textSpans.add(_createTextSpan(currentText, lastColor));
+          currentText = '';
+        }
+
+        currentText += char; // Zeichen zum aktuellen Text hinzufügen
+        lastColor = color;
+      }
+      currentText += '\n'; // Zeilenumbruch nach jeder Zeile
+    }
+
+    // Falls noch Text übrig ist, den letzten TextSpan hinzufügen
+    if (currentText.isNotEmpty) {
+      textSpans.add(_createTextSpan(currentText, lastColor));
+    }
+
+    return textSpans;
   }
 
-  TextSpan _createTextSpan(String text, int color) {
-    switch (color) {
-      case 1:
-        return TextSpan(text: text, style: gcwMonotypeTextStyle().copyWith(color: Colors.red));
-      case 2:
-        return TextSpan(text: text, style: gcwMonotypeTextStyle().copyWith(color: Colors.green));
-      case 3:
-        return TextSpan(text: text, style: gcwMonotypeTextStyle().copyWith(color: Colors.yellow[700]));
-      case 4:
-        return TextSpan(text: text, style: gcwMonotypeTextStyle().copyWith(color: Colors.blue));
-      case 5:
-        return TextSpan(text: text, style: gcwMonotypeTextStyle().copyWith(color: Colors.brown));
-      case 6:
-        return TextSpan(text: text, style: gcwMonotypeTextStyle().copyWith(color: Colors.orange));
-      case 7:
-        return TextSpan(text: text, style: gcwMonotypeTextStyle().copyWith(color: Colors.deepPurple));
-      default:
-        return TextSpan(text: text, style: gcwMonotypeTextStyle());
+  TextSpan _createTextSpan(String text, Color color) {
+    return TextSpan(text: text, style: gcwMonotypeTextStyle().copyWith(color: color));
+  }
+
+  Color _getTextColorValue(int value) {
+    switch (value) {
+      case 1: return Colors.red;
+      case 2: return Colors.green;
+      case 3: return Colors.deepOrangeAccent;
+      case 4: return Colors.blue;
+      case 5: return Colors.brown;
+      case 6: return Colors.orange;
+      case 7: return Colors.purple;
+      default: return themeColors().mainFont();
     }
   }
 }

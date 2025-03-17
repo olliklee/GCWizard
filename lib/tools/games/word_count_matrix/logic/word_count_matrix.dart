@@ -15,13 +15,14 @@ enum Directions {
 class WordSearchResult {
   final Map<Directions, int> counts;
   final List<List<int>> markerMatrix;
+  final List<List<String>> inputMatrix;
 
-  WordSearchResult(this.counts, this.markerMatrix);
+  WordSearchResult(this.counts, this.markerMatrix, this.inputMatrix);
   int get sumTotal => counts.values.reduce((a, b) => a + b);
 }
 
 WordSearchResult wordCountMatrix(
-    String matrixText,
+    String inputText,
     String word, {
       bool caseSensitive = false,
       List<SearchFlags> flags = const [
@@ -32,12 +33,12 @@ WordSearchResult wordCountMatrix(
     }) {
   
   var ignoreCase = flags.contains(SearchFlags.IGNORECASE);
-  var cleanedText = _cleanText(matrixText, ignoreCase: ignoreCase);
+  var cleanedText = _cleanText(inputText, ignoreCase: ignoreCase);
   var searchText = _cleanText(word, ignoreCase: ignoreCase);
-  var matrix = _convertToMatrix(cleanedText);
+  var inputMatrix = _convertToMatrix(cleanedText);
 
-  int rows = matrix.length;
-  int cols = matrix[0].length;
+  int rows = inputMatrix.length;
+  int cols = inputMatrix[0].length;
 
   List<List<int>> markerMatrix = List.generate(rows, (i) => List.filled(cols, 0));
 
@@ -47,13 +48,13 @@ WordSearchResult wordCountMatrix(
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
       for (var dir in allowedDirections) {
-        if (_searchAndMark(matrix, markerMatrix, searchText, i, j, dir.dx, dir.dy)) {
+        if (_searchAndMark(inputMatrix, markerMatrix, searchText, i, j, dir.dx, dir.dy)) {
           counts[dir] = (counts[dir] ?? 0) + 1;
         }
       }
     }
   }
-  return WordSearchResult(counts, markerMatrix);
+  return WordSearchResult(counts, markerMatrix, inputMatrix);
 }
 
 bool _searchAndMark(List<List<String>> matrix, List<List<int>> markerMatrix, String word, int x, int y, int dx, int dy) {
