@@ -14,82 +14,67 @@ enum Directions {
 
   final int dx;
   final int dy;
-  final String name;
+  final String directionArrow;
 
-  const Directions(this.dx, this.dy, this.name);
+  const Directions(this.dx, this.dy, this.directionArrow);
 }
-
-//   "common_compassrose_n_name": "North",
 
 class WordSearchResult {
   final Map<Directions, int> counts;
-  final List<List<int>> markerMatrix;
-  final List<List<String>> inputMatrix;
 
-  WordSearchResult(this.counts, this.markerMatrix, this.inputMatrix);
+  WordSearchResult(this.counts);
+
   int get sumTotal => counts.values.reduce((a, b) => a + b);
 }
 
 WordSearchResult wordCountMatrix(
-    String inputText,
-    String word, {
-      bool caseSensitive = false,
-      Set<SearchFlags> flags = const {
-        SearchFlags.HORIZONTAL, 
-        SearchFlags.VERTICAL, 
-        SearchFlags.DIAGONAL,
-        SearchFlags.CASESENSITIVE},
-    }) {
-  
+  String inputText,
+  String word, {
+  bool caseSensitive = false,
+  Set<SearchFlags> flags = const {
+    SearchFlags.HORIZONTAL,
+    SearchFlags.VERTICAL,
+    SearchFlags.DIAGONAL,
+  },
+}) {
+  List<Directions> allowedDirections = _getAllowedDirection(flags);
+  Map<Directions, int> counts = {for (var dir in allowedDirections) dir: 0};
+
+  if (inputText.isEmpty || word.isEmpty || flags.isEmpty) {
+    return WordSearchResult(counts);
+  }
   var caseSensitive = flags.contains(SearchFlags.CASESENSITIVE);
   var cleanedText = _cleanText(inputText, caseSensitive: caseSensitive);
   var searchText = _cleanText(word, caseSensitive: caseSensitive);
-  var inputMatrix = _convertToMatrix(cleanedText);
+  var inputGrid = _convertToMatrix(cleanedText);
 
-
-  int rows = inputMatrix.length;
-  int cols = inputMatrix[0].length;
-
-  List<List<int>> markerMatrix = List.generate(rows, (i) => List.filled(cols, 0));
-
-  List<Directions> allowedDirections = _getAllowedDirection(flags);
-  Map<Directions, int> counts = {for (var dir in allowedDirections) dir: 0};
+  int rows = inputGrid.length;
+  int cols = inputGrid[0].length;
 
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
       for (var dir in allowedDirections) {
-        if (_searchAndMark(inputMatrix, markerMatrix, searchText, i, j, dir.dx, dir.dy)) {
+        if (_search(inputGrid, searchText, i, j, dir.dx, dir.dy)) {
           counts[dir] = (counts[dir] ?? 0) + 1;
         }
       }
     }
   }
-  return WordSearchResult(counts, markerMatrix, inputMatrix);
+  return WordSearchResult(counts);
 }
 
-bool _searchAndMark(List<List<String>> matrix, List<List<int>> markerMatrix, String word, int x, int y, int dx, int dy) {
-  int rows = matrix.length;
-  int cols = matrix[0].length;
+bool _search(List<List<String>> grid, String word, int x, int y, int dx, int dy) {
+  int rows = grid.length;
+  int cols = grid[0].length;
 
   for (int k = 0; k < word.length; k++) {
     int nx = x + k * dx;
     int ny = y + k * dy;
 
-    if (nx < 0 || ny < 0 || nx >= rows || ny >= cols || matrix[nx][ny] != word[k]) {
+    if (nx < 0 || ny < 0 || nx >= rows || ny >= cols || grid[nx][ny] != word[k]) {
       return false;
     }
   }
-
-  // vertikal = 1, horizontal = 2, diagonal = 4
-  int markerValue = (dx == 0 || dy == 0) ? (dx == 0 ? 2 : 1) : 4;
-
-  // mark all matches
-  for (int k = 0; k < word.length; k++) {
-    int nx = x + k * dx;
-    int ny = y + k * dy;
-    markerMatrix[nx][ny] |= markerValue;
-  }
-
   return true;
 }
 
@@ -109,6 +94,7 @@ List<Directions> _getAllowedDirection(Set<SearchFlags> flags) {
 }
 
 String _cleanText(String input, {bool caseSensitive = false}) {
+  // allows even diacritics and punctuations
   RegExp regex = RegExp(r'[\p{L}\p{N}\p{P} ]', unicode: true);
 
   return input
@@ -123,33 +109,6 @@ List<List<String>> _convertToMatrix(String input) {
   var maxLength = lines.map((line) => line.length).reduce((a, b) => a > b ? a : b);
 
   return lines
-      .map((line) => line.padRight(maxLength, ' ').split("")) // fill space
+      .map((line) => line.padRight(maxLength, ' ').split("")) // fill spaces
       .toList();
-}
-
-void main() {
-  var matrixText = '''MMMSXXMASM
-MAXMSMAMSA
-AMXSXMAAMM
-MSAMASMSMX
-XMASAMXAMM
-XXAMMXXAMA
-SMSMSASXSS
-SAXAMASAAA
-MAMMMXMMMM
-MXMXAXMASX''';
-
-  String word = "XMAS";
-
-  var result = wordCountMatrix(matrixText, word);
-  print("Fundstellen (1 = horizontal, 2 = vertikal, 4 = diagonal):");
-  for (var row in result.markerMatrix) {
-    print(row.join(" "));
-  }
-
-  print("Vorkommen pro Richtung:");
-  result.counts.forEach((direction, count) {
-    print("${direction.name}: $count-mal");
-  });
-  print("total ${result.sumTotal}");
 }
