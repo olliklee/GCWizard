@@ -1,16 +1,25 @@
 import 'dart:convert';
 
-enum SearchFlags { HORIZONTAL, VERTICAL, DIAGONAL, IGNORECASE }
+enum SearchFlags { HORIZONTAL, VERTICAL, DIAGONAL, CASESENSITIVE }
 
 enum Directions {
-  N(-1, 0), E(0, 1), S(1, 0), W(0, -1),
-  NE(-1, 1), SE(1, 1), SW(1, -1), NW(-1, -1);
+  N(-1, 0, '⬆️'),
+  E(0, 1, '➡️'),
+  S(1, 0, '⬇️'),
+  W(0, -1, '⬅️'),
+  NE(-1, 1, '↗️'),
+  SE(1, 1, '↘️'),
+  SW(1, -1, '↙️'),
+  NW(-1, -1, '↖️');
 
   final int dx;
   final int dy;
+  final String name;
 
-  const Directions(this.dx, this.dy);
+  const Directions(this.dx, this.dy, this.name);
 }
+
+//   "common_compassrose_n_name": "North",
 
 class WordSearchResult {
   final Map<Directions, int> counts;
@@ -25,17 +34,18 @@ WordSearchResult wordCountMatrix(
     String inputText,
     String word, {
       bool caseSensitive = false,
-      List<SearchFlags> flags = const [
+      Set<SearchFlags> flags = const {
         SearchFlags.HORIZONTAL, 
         SearchFlags.VERTICAL, 
         SearchFlags.DIAGONAL,
-        SearchFlags.IGNORECASE],
+        SearchFlags.CASESENSITIVE},
     }) {
   
-  var ignoreCase = flags.contains(SearchFlags.IGNORECASE);
-  var cleanedText = _cleanText(inputText, ignoreCase: ignoreCase);
-  var searchText = _cleanText(word, ignoreCase: ignoreCase);
+  var caseSensitive = flags.contains(SearchFlags.CASESENSITIVE);
+  var cleanedText = _cleanText(inputText, caseSensitive: caseSensitive);
+  var searchText = _cleanText(word, caseSensitive: caseSensitive);
   var inputMatrix = _convertToMatrix(cleanedText);
+
 
   int rows = inputMatrix.length;
   int cols = inputMatrix[0].length;
@@ -83,28 +93,28 @@ bool _searchAndMark(List<List<String>> matrix, List<List<int>> markerMatrix, Str
   return true;
 }
 
-List<Directions> _getAllowedDirection(List<SearchFlags> flags) {
+List<Directions> _getAllowedDirection(Set<SearchFlags> flags) {
   List<Directions> allowedDirections = [];
 
   if (flags.contains(SearchFlags.HORIZONTAL)) {
     allowedDirections.addAll([Directions.E, Directions.W]);
   }
   if (flags.contains(SearchFlags.VERTICAL)) {
-    allowedDirections.addAll([Directions.N, Directions.S]);
+    allowedDirections.addAll([Directions.S, Directions.N]);
   }
   if (flags.contains(SearchFlags.DIAGONAL)) {
-    allowedDirections.addAll([Directions.SE, Directions.NE, Directions.SW, Directions.NW]);
+    allowedDirections.addAll([Directions.SE, Directions.NW, Directions.SW, Directions.NE]);
   }
   return allowedDirections;
 }
 
-String _cleanText(String input, {bool ignoreCase = true}) {
+String _cleanText(String input, {bool caseSensitive = false}) {
   RegExp regex = RegExp(r'[\p{L}\p{N}\p{P} ]', unicode: true);
 
   return input
       .split('\n')
       .map((line) => line.split('').where((char) => regex.hasMatch(char)).join(''))
-      .map((line) => ignoreCase ? line.toUpperCase() : line)
+      .map((line) => caseSensitive ? line : line.toUpperCase())
       .join('\n');
 }
 
@@ -117,29 +127,29 @@ List<List<String>> _convertToMatrix(String input) {
       .toList();
 }
 
-// void main() {
-//   var matrixText = '''MMMSXXMASM
-// MAXMSMAMSA
-// AMXSXMAAMM
-// MSAMASMSMX
-// XMASAMXAMM
-// XXAMMXXAMA
-// SMSMSASXSS
-// SAXAMASAAA
-// MAMMMXMMMM
-// MXMXAXMASX''';
-//
-//   String word = "XMAS";
-//
-//   var result = wordCountInMatrixDetailed(matrixText, word);
-//   print("Fundstellen (1 = horizontal, 2 = vertikal, 4 = diagonal):");
-//   for (var row in result.markerMatrix) {
-//     print(row.join(" "));
-//   }
-//
-//   print("Vorkommen pro Richtung:");
-//   result.counts.forEach((direction, count) {
-//     print("${direction.name}: $count-mal");
-//   });
-//   print("total ${result.sumTotal}");
-// }
+void main() {
+  var matrixText = '''MMMSXXMASM
+MAXMSMAMSA
+AMXSXMAAMM
+MSAMASMSMX
+XMASAMXAMM
+XXAMMXXAMA
+SMSMSASXSS
+SAXAMASAAA
+MAMMMXMMMM
+MXMXAXMASX''';
+
+  String word = "XMAS";
+
+  var result = wordCountMatrix(matrixText, word);
+  print("Fundstellen (1 = horizontal, 2 = vertikal, 4 = diagonal):");
+  for (var row in result.markerMatrix) {
+    print(row.join(" "));
+  }
+
+  print("Vorkommen pro Richtung:");
+  result.counts.forEach((direction, count) {
+    print("${direction.name}: $count-mal");
+  });
+  print("total ${result.sumTotal}");
+}

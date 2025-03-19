@@ -7,7 +7,9 @@ import 'package:gc_wizard/common_widgets/buttons/gcw_iconbutton.dart';
 import 'package:gc_wizard/common_widgets/clipboard/gcw_clipboard.dart';
 import 'package:gc_wizard/common_widgets/dividers/gcw_text_divider.dart';
 import 'package:gc_wizard/common_widgets/gcw_expandable.dart';
+import 'package:gc_wizard/common_widgets/outputs/gcw_columned_multiline_output.dart';
 import 'package:gc_wizard/common_widgets/outputs/gcw_default_output.dart';
+import 'package:gc_wizard/common_widgets/outputs/gcw_output.dart';
 import 'package:gc_wizard/common_widgets/switches/gcw_onoff_switch.dart';
 import 'package:gc_wizard/common_widgets/textfields/gcw_textfield.dart';
 import 'package:gc_wizard/tools/games/word_count_matrix/logic/word_count_matrix.dart';
@@ -23,14 +25,13 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
   late TextEditingController _inputController;
   late TextEditingController _wordController;
 
-  String _currentInput = '';
-  String _currentWord = '';
-  List<SearchFlags> _currentSearchDirection = [
+  String _currentGrid = '';
+  String _currentSearchWord = '';
+  final Set<SearchFlags> _currentSearchOptions = {
     SearchFlags.HORIZONTAL,
     SearchFlags.VERTICAL,
     SearchFlags.DIAGONAL,
-    SearchFlags.IGNORECASE,
-  ];
+  };
 
   var _currentOptionsExpanded = false;
 
@@ -43,8 +44,8 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
   void initState() {
     super.initState();
 
-    _inputController = TextEditingController(text: _currentInput);
-    _wordController = TextEditingController(text: _currentWord);
+    _inputController = TextEditingController(text: _currentGrid);
+    _wordController = TextEditingController(text: _currentSearchWord);
   }
 
   @override
@@ -65,7 +66,8 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
         style: gcwMonotypeTextStyle(),
         onChanged: (text) {
           setState(() {
-            _currentInput = text;
+            _currentGrid = text;
+            _calcOutput();
           });
         },
       ),
@@ -76,7 +78,8 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
         controller: _wordController,
         onChanged: (text) {
           setState(() {
-            _currentWord = text;
+            _currentSearchWord = text;
+            _calcOutput();
           });
         },
       ),
@@ -97,51 +100,26 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
         });
       },
       child: Column(children: <Widget>[
-        GCWOnOffSwitch(
-          title: i18n(context, 'word_search_horizontal'),
-          value: _currentSearchDirection.contains(SearchFlags.HORIZONTAL),
-          onChanged: (value) {
-            setState(() {
-              _currentSearchDirection = value
-                  ? [..._currentSearchDirection, SearchFlags.HORIZONTAL]
-                  : _currentSearchDirection.where((flag) => flag != SearchFlags.HORIZONTAL).toList();
-            });
-          },
-        ),
-        GCWOnOffSwitch(
-          title: i18n(context, 'word_search_vertical'),
-          value:_currentSearchDirection.contains(SearchFlags.VERTICAL),
-          onChanged: (value) {
-            setState(() {
-              _currentSearchDirection = value
-                  ? [..._currentSearchDirection, SearchFlags.VERTICAL]
-                  : _currentSearchDirection.where((flag) => flag != SearchFlags.VERTICAL).toList();
-            });
-          },
-        ),
-        GCWOnOffSwitch(
-          title: i18n(context, 'word_search_diagonal'),
-          value: _currentSearchDirection.contains(SearchFlags.DIAGONAL),
-          onChanged: (value) {
-            setState(() {
-              _currentSearchDirection = value
-                  ? [..._currentSearchDirection, SearchFlags.DIAGONAL]
-                  : _currentSearchDirection.where((flag) => flag != SearchFlags.DIAGONAL).toList();
-            });
-          },
-        ),
-        GCWOnOffSwitch(
-          title: i18n(context, 'word_search_reverse'),
-          value: _currentSearchDirection.contains(SearchFlags.IGNORECASE),
-          onChanged: (value) {
-            setState(() {
-              _currentSearchDirection = value
-                  ? [..._currentSearchDirection, SearchFlags.IGNORECASE]
-                  : _currentSearchDirection.where((flag) => flag != SearchFlags.IGNORECASE).toList();
-            });
-          },
-        ),
+        _showOnOffSwitch('word_search_horizontal', SearchFlags.HORIZONTAL),
+        _showOnOffSwitch('word_search_vertical', SearchFlags.VERTICAL),
+        _showOnOffSwitch('word_search_diagonal', SearchFlags.DIAGONAL),
+        _showOnOffSwitch('common_case_sensitive', SearchFlags.CASESENSITIVE),
       ]),
+    );
+  }
+
+  Widget _showOnOffSwitch(String label, SearchFlags flag) {
+    return GCWOnOffSwitch(
+      title: i18n(context, label),
+      value: _currentSearchOptions.contains(flag),
+      onChanged: (value) {
+        setState(() {
+          (value)
+              ? _currentSearchOptions.add(flag)
+              : _currentSearchOptions.remove(flag);
+          _calcOutput();
+        });
+      },
     );
   }
 
@@ -189,12 +167,13 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
   }
 
   void _calcOutput() {
-    var result = wordCountMatrix(_currentInput, _currentWord, flags: _currentSearchDirection);
+    if (_currentGrid.isEmpty || _currentSearchWord.isEmpty) return;
+
+    var result = wordCountMatrix(_currentGrid, _currentSearchWord, flags: _currentSearchOptions);
     _markerMatrix = result.markerMatrix;
     _inputMatrix = result.inputMatrix;
     _countsPerDirection = result.counts;
     _totalCount = result.sumTotal;
-    setState(() {});
   }
 
   void _deleteMarkedLetters() {
@@ -214,6 +193,10 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
   }
 
   Widget _buildOutput() {
+    var textMatrix = _inputMatrix/*_buildRtfOutput()*/;
+    var directionsCountList =
+        _countsPerDirection.entries.map((entry) => [entry.key.name, entry.value]).toList();
+
     return GCWDefaultOutput(
       trailing: Row(
         children: <Widget>[
@@ -222,14 +205,23 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
             size: IconButtonSize.SMALL,
             icon: Icons.content_copy,
             onPressed: () {
-              insertIntoGCWClipboard(context, _countsPerDirection.join('\n'));
+              insertIntoGCWClipboard(context, textMatrix.join('\n'));
             },
           ),
         ],
       ),
-      child: RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(children: _buildRtfOutput(), style: gcwTextStyle()),
+      child: Column(
+        children: [
+          GCWOutput(
+              child: '${i18n(context, 'word_count_matrix_occurences')}: $_totalCount',
+              copyText: '$_totalCount'),
+          GCWColumnedMultilineOutput(data: directionsCountList, copyColumn: 1,),
+          // RichText(
+          //   textAlign: TextAlign.center,
+          //   text: TextSpan(children: textMatrix, style: gcwTextStyle()),
+          // ),
+
+        ],
       ),
     );
   }
@@ -238,16 +230,16 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
     List<TextSpan> textSpans = [];
 
     // Prüfen, ob der Eingabetext leer ist oder die Matrix nur Nullen enthält
-    if (_currentInput.isEmpty || _markerMatrix.every((row) => row.every((value) => value == 0))) {
+    if (_currentGrid.isEmpty || _markerMatrix.every((row) => row.every((value) => value == 0))) {
       return textSpans;
     }
 
     String currentText = '';
     Color lastColor = _getTextColorValue(0); // Standardfarbe
 
-    for (int row = 0; row < _currentInput.length; row++) {
-      for (int col = 0; col < _currentInput[row].length; col++) {
-        String char = _currentInput[row][col]; // Aktuelles Zeichen
+    for (int row = 0; row < _currentGrid.length; row++) {
+      for (int col = 0; col < _currentGrid[row].length; col++) {
+        String char = _currentGrid[row][col]; // Aktuelles Zeichen
         Color color = _getTextColorValue(_markerMatrix[row][col]); // Farbe aus der MarkerMatrix holen
 
         // Falls sich die Farbe ändert, füge den bisherigen Text hinzu
