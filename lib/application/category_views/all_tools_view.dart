@@ -184,6 +184,7 @@ import 'package:gc_wizard/tools/games/number_pyramid/widget/number_pyramid_solve
 import 'package:gc_wizard/tools/games/sudoku/widget/sudoku_solver.dart';
 import 'package:gc_wizard/tools/games/tower_of_hanoi/widget/tower_of_hanoi.dart';
 import 'package:gc_wizard/tools/games/verbal_arithmetic/widget/verbal_arithmetic.dart';
+import 'package:gc_wizard/tools/games/word_count_matrix/widget/word_count_matrix.dart';
 import 'package:gc_wizard/tools/games/word_search/widget/word_search.dart';
 import 'package:gc_wizard/tools/general_tools/gcwizardscript/widget/gcwizard_script.dart';
 import 'package:gc_wizard/tools/general_tools/randomizer/widget/randomizer_selection.dart';
@@ -830,6 +831,7 @@ void _initStaticToolList() {
       className(const WhitespaceLanguage()),
       className(const WigWagSemaphoreTelegraph()),
       className(const Windchill()),
+      className(const WordCountMatrix()),
       className(const WordSearch()),
       className(const Z22()),
       className(ZamonianNumbers()),

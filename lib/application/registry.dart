@@ -295,6 +295,7 @@ import 'package:gc_wizard/tools/games/scrabble/widget/scrabble_overview.dart';
 import 'package:gc_wizard/tools/games/sudoku/widget/sudoku_solver.dart';
 import 'package:gc_wizard/tools/games/tower_of_hanoi/widget/tower_of_hanoi.dart';
 import 'package:gc_wizard/tools/games/verbal_arithmetic/widget/verbal_arithmetic.dart';
+import 'package:gc_wizard/tools/games/word_count_matrix/widget/word_count_matrix.dart';
 import 'package:gc_wizard/tools/games/word_search/widget/word_search.dart';
 import 'package:gc_wizard/tools/general_tools/grid_generator/grid/widget/grid.dart';
 import 'package:gc_wizard/tools/general_tools/randomizer/widget/randomizer_cards.dart';
@@ -2115,6 +2116,11 @@ void initializeRegistry(BuildContext context) {
     ], searchKeys: const [
       'z22',
     ]),
+    GCWTool(
+        tool: const WordCountMatrix(),
+        id:'word_count_matrix',
+        categories: const [ToolCategory.GAMES],
+        searchKeys: const ['word_count_matrix', 'grid']),
     GCWTool(
         tool: const WordSearch(),
         id: 'word_search',
