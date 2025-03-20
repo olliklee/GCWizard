@@ -21,7 +21,7 @@ enum Directions {
 
 class WordSearchResult {
   final Map<Directions, int> counts;
-  final String cleanedInput;
+  final List<List<String>> cleanedInput;
 
   WordSearchResult(this.counts, this.cleanedInput);
 
@@ -41,7 +41,7 @@ WordSearchResult wordCountMatrix(
   Map<Directions, int> counts = {for (var dir in allowedDirections) dir: 0};
 
   if (inputText.isEmpty || word.isEmpty || flags.isEmpty) {
-    return WordSearchResult(counts, inputText);
+    return WordSearchResult(counts, [[]]);
   }
 
   var caseSensitive = flags.contains(SearchFlags.CASESENSITIVE);
@@ -61,7 +61,7 @@ WordSearchResult wordCountMatrix(
       }
     }
   }
-  return WordSearchResult(counts, cleanedText);
+  return WordSearchResult(counts, inputGrid);
 }
 
 bool _search(List<List<String>> grid, String word, int x, int y, int dx, int dy) {

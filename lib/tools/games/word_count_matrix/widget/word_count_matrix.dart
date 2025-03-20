@@ -31,10 +31,11 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
   };
 
   var _currentOptionsExpanded = false;
+  var _currentShowGridExpanded = false;
 
   Map<Directions, int> _countsPerDirection = {};
   int _totalCount = 0;
-  late String _cleanedGrid;
+  late List<List<String>> _cleanedGrid;
 
   @override
   void initState() {
@@ -79,8 +80,16 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
           });
         },
       ),
-      _buildOptionWidget(),
-      _buildOutput(),
+      if (_currentSearchWord.isNotEmpty && _currentGrid.isNotEmpty)
+        Column(
+          children: [
+            _buildOptionWidget(),
+            _buildShowGridWidget(),
+            _buildOutput(),
+          ],
+        ),
+
+
     ]);
   }
 
@@ -103,15 +112,32 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
     );
   }
 
+  Widget _buildShowGridWidget() {
+    _calcOutput();
+    return GCWExpandableTextDivider(
+      text: i18n(context, 'word_count_matrix_show_grid'),
+      suppressTopSpace: false,
+      expanded: _currentShowGridExpanded,
+      onChanged: (value) {
+        setState(() {
+          _currentShowGridExpanded = value;
+        });
+      },
+      child: GCWText(
+        text: _gridToText(_cleanedGrid),
+        align: Alignment.center,
+        style: gcwMonotypeTextStyle(),
+      ),
+    );
+  }
+
   Widget _showOnOffSwitch(String label, SearchFlags flag) {
     return GCWOnOffSwitch(
       title: i18n(context, label),
       value: _currentSearchOptions.contains(flag),
       onChanged: (value) {
         setState(() {
-          (value)
-              ? _currentSearchOptions.add(flag)
-              : _currentSearchOptions.remove(flag);
+          (value) ? _currentSearchOptions.add(flag) : _currentSearchOptions.remove(flag);
           _calcOutput();
         });
       },
@@ -119,11 +145,8 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
   }
 
   void _calcOutput() {
-    bool hasSearchDirection = _currentSearchOptions.any((flag) =>
-    flag == SearchFlags.HORIZONTAL ||
-        flag == SearchFlags.VERTICAL ||
-        flag == SearchFlags.DIAGONAL
-    );
+    bool hasSearchDirection = _currentSearchOptions
+        .any((flag) => flag == SearchFlags.HORIZONTAL || flag == SearchFlags.VERTICAL || flag == SearchFlags.DIAGONAL);
 
     if (!hasSearchDirection) {
       setState(() {
@@ -157,13 +180,17 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
     return GCWDefaultOutput(
       child: Column(
         children: [
-          GCWText(text: _cleanedGrid, align: Alignment.center, style: gcwMonotypeTextStyle(),),
-          GCWOutput(
-              child: '${i18n(context, 'word_count_matrix_occurences')}: $_totalCount',
-              copyText: '$_totalCount'),
-          GCWColumnedMultilineOutput(data: directionsCountList, copyColumn: 1,),
+          GCWOutput(child: '${i18n(context, 'word_count_matrix_occurences')}: $_totalCount', copyText: '$_totalCount'),
+          GCWColumnedMultilineOutput(
+            data: directionsCountList,
+            copyColumn: 1,
+          ),
         ],
       ),
     );
+  }
+
+  String _gridToText(List<List<String>> matrix) {
+    return matrix.map((row) => row.join(' ')).join('\n');
   }
 }
