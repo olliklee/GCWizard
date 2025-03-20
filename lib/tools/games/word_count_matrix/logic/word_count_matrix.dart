@@ -21,11 +21,11 @@ enum Directions {
 
 class WordSearchResult {
   final Map<Directions, int> counts;
+  final String cleanedInput;
 
-  WordSearchResult(this.counts);
+  WordSearchResult(this.counts, this.cleanedInput);
 
-  int get sumTotal => counts.values.reduce((a, b) => a + b);
-}
+  int get sumTotal => counts.values.isNotEmpty ? counts.values.reduce((a, b) => a + b) : 0;}
 
 WordSearchResult wordCountMatrix(
   String inputText,
@@ -41,8 +41,9 @@ WordSearchResult wordCountMatrix(
   Map<Directions, int> counts = {for (var dir in allowedDirections) dir: 0};
 
   if (inputText.isEmpty || word.isEmpty || flags.isEmpty) {
-    return WordSearchResult(counts);
+    return WordSearchResult(counts, inputText);
   }
+
   var caseSensitive = flags.contains(SearchFlags.CASESENSITIVE);
   var cleanedText = _cleanText(inputText, caseSensitive: caseSensitive);
   var searchText = _cleanText(word, caseSensitive: caseSensitive);
@@ -60,7 +61,7 @@ WordSearchResult wordCountMatrix(
       }
     }
   }
-  return WordSearchResult(counts);
+  return WordSearchResult(counts, cleanedText);
 }
 
 bool _search(List<List<String>> grid, String word, int x, int y, int dx, int dy) {
@@ -94,10 +95,11 @@ List<Directions> _getAllowedDirection(Set<SearchFlags> flags) {
 }
 
 String _cleanText(String input, {bool caseSensitive = false}) {
-  // allows even diacritics and punctuations
-  RegExp regex = RegExp(r'[\p{L}\p{N}\p{P} ]', unicode: true);
+  // allows even diacritics
+  RegExp regex = RegExp(r'[\p{L}\p{N}.]', unicode: true);
 
   return input
+      .replaceAll('\n\n', '\n')
       .split('\n')
       .map((line) => line.split('').where((char) => regex.hasMatch(char)).join(''))
       .map((line) => caseSensitive ? line : line.toUpperCase())
@@ -105,10 +107,16 @@ String _cleanText(String input, {bool caseSensitive = false}) {
 }
 
 List<List<String>> _convertToMatrix(String input) {
-  List<String> lines = const LineSplitter().convert(input);
+  List<String> lines = const LineSplitter()
+      .convert(input)
+      .map((line) => line.trimRight()) // Entfernt überflüssige Leerzeichen am Zeilenende
+      .toList();
+
+  if (lines.isEmpty) return []; // Falls der Input leer ist, gib eine leere Liste zurück.
+
   var maxLength = lines.map((line) => line.length).reduce((a, b) => a > b ? a : b);
 
   return lines
-      .map((line) => line.padRight(maxLength, ' ').split("")) // fill spaces
+      .map((line) => line.padRight(maxLength, '.').split('')) // Zeilen mit Punkten auffüllen
       .toList();
 }

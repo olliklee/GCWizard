@@ -3,6 +3,7 @@ import 'package:gc_wizard/application/i18n/logic/app_localizations.dart';
 import 'package:gc_wizard/application/theme/theme.dart';
 import 'package:gc_wizard/common_widgets/dividers/gcw_text_divider.dart';
 import 'package:gc_wizard/common_widgets/gcw_expandable.dart';
+import 'package:gc_wizard/common_widgets/gcw_text.dart';
 import 'package:gc_wizard/common_widgets/outputs/gcw_columned_multiline_output.dart';
 import 'package:gc_wizard/common_widgets/outputs/gcw_default_output.dart';
 import 'package:gc_wizard/common_widgets/outputs/gcw_output.dart';
@@ -33,6 +34,7 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
 
   Map<Directions, int> _countsPerDirection = {};
   int _totalCount = 0;
+  late String _cleanedGrid;
 
   @override
   void initState() {
@@ -78,7 +80,6 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
         },
       ),
       _buildOptionWidget(),
-      // _buildButtonRow(),
       _buildOutput(),
     ]);
   }
@@ -133,23 +134,30 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
     }
 
     var result = wordCountMatrix(_currentGrid, _currentSearchWord, flags: _currentSearchOptions);
+    _cleanedGrid = result.cleanedInput;
+
     setState(() {
-      _countsPerDirection = result.counts;
-      _totalCount = result.sumTotal;
+      if (_currentSearchWord.length > 1) {
+        _countsPerDirection = result.counts;
+        _totalCount = result.sumTotal;
+      } else {
+        _countsPerDirection = {};
+        _totalCount = result.sumTotal ~/ 8; // any direction counts only once
+      }
     });
   }
 
   Widget _buildOutput() {
     var directionsCountList = _countsPerDirection.entries
-        .where((entry) => entry.value > 0) // Nur Werte größer als 0 behalten
+        .where((entry) => entry.value > 0)
         .map((entry) => [entry.key.directionArrow, entry.value])
         .toList();
 
     if (_totalCount == 0) return Container();
-
     return GCWDefaultOutput(
       child: Column(
         children: [
+          GCWText(text: _cleanedGrid, align: Alignment.center, style: gcwMonotypeTextStyle(),),
           GCWOutput(
               child: '${i18n(context, 'word_count_matrix_occurences')}: $_totalCount',
               copyText: '$_totalCount'),
