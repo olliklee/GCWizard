@@ -193,4 +193,51 @@ class _WordCountMatrixState extends State<WordCountMatrix> {
   String _gridToText(List<List<String>> matrix) {
     return matrix.map((row) => row.join(' ')).join('\n');
   }
+
+  List<TextSpan> _buildRtfOutput(List<String> text, List<Uint8List> founds) {
+    var textSpan = <TextSpan>[];
+
+    if (text.isEmpty || text.first.isEmpty || founds.isEmpty || founds.first.isEmpty) return textSpan;
+    var lastColor = _getTextColorValue(founds.first.first);
+    var actText = '';
+
+    for (var row = 0; row < text.length; row++) {
+      if (row > 0) actText += '\n';
+      for (var column = 0; column < text[row].length; column++) {
+        var actColor = lastColor;
+        if (founds.length > row && founds[row].length > column) {
+          actColor = _getTextColorValue(founds[row][column]);
+        }
+        var lastEntry = (row == text.length - 1 && column == text[row].length - 1);
+        if (lastEntry || actColor != lastColor) {
+          if (lastEntry) {
+            if (actColor != lastColor) {
+              textSpan.add(_createTextSpan(actText, lastColor));
+              actText = '';
+              lastColor = actColor;
+            }
+            actText += text[row][column] + ' ';
+          }
+
+          textSpan.add(_createTextSpan(actText, lastColor));
+          actText = '';
+          lastColor = actColor;
+        }
+        actText += text[row][column] + ' ';
+      }
+    }
+    return textSpan;
+  }
+
+  TextSpan _createTextSpan(String text, int color) {
+    switch (color) {
+      case 1:
+        return TextSpan(text: text, style: gcwMonotypeTextStyle().copyWith(color: Colors.red));
+      case 2:
+        return TextSpan(text: text, style: gcwMonotypeTextStyle().copyWith(color: Colors.green));
+      case 3:
+        return TextSpan(text: text, style: gcwMonotypeTextStyle().copyWith(color: Colors.blue));
+      default:
+        return TextSpan(text: text, style: gcwMonotypeTextStyle());
+    }
 }

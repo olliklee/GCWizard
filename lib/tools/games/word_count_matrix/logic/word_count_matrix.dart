@@ -22,8 +22,9 @@ enum Directions {
 class WordSearchResult {
   final Map<Directions, int> counts;
   final List<List<String>> cleanedInput;
+  final List<List<int>> markerMatrix;
 
-  WordSearchResult(this.counts, this.cleanedInput);
+  WordSearchResult(this.counts, this.cleanedInput, this.markerMatrix);
 
   int get sumTotal => counts.values.isNotEmpty ? counts.values.reduce((a, b) => a + b) : 0;}
 
@@ -41,7 +42,7 @@ WordSearchResult wordCountMatrix(
   Map<Directions, int> counts = {for (var dir in allowedDirections) dir: 0};
 
   if (inputText.isEmpty || word.isEmpty || flags.isEmpty) {
-    return WordSearchResult(counts, [[]]);
+    return WordSearchResult(counts, [[]], [[]]);
   }
 
   var caseSensitive = flags.contains(SearchFlags.CASESENSITIVE);
@@ -52,19 +53,21 @@ WordSearchResult wordCountMatrix(
   int rows = inputGrid.length;
   int cols = inputGrid[0].length;
 
+  List<List<int>> markerMatrix = List.generate(rows, (i) => List.filled(cols, 0));
+
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
       for (var dir in allowedDirections) {
-        if (_search(inputGrid, searchText, i, j, dir.dx, dir.dy)) {
+        if (_search(inputGrid, markerMatrix, searchText, i, j, dir.dx, dir.dy)) {
           counts[dir] = (counts[dir] ?? 0) + 1;
         }
       }
     }
   }
-  return WordSearchResult(counts, inputGrid);
+  return WordSearchResult(counts, inputGrid, markerMatrix);
 }
 
-bool _search(List<List<String>> grid, String word, int x, int y, int dx, int dy) {
+bool _search(List<List<String>> grid, List<List<int>> markerMatrix, String word, int x, int y, int dx, int dy) {
   int rows = grid.length;
   int cols = grid[0].length;
 
@@ -75,6 +78,17 @@ bool _search(List<List<String>> grid, String word, int x, int y, int dx, int dy)
     if (nx < 0 || ny < 0 || nx >= rows || ny >= cols || grid[nx][ny] != word[k]) {
       return false;
     }
+  }
+
+  int markerValue = (dx == 0 || dy == 0) ?
+  (dx == 0 ? 2 : 1) : 3; // Hor = 1, Ver = 2, Dia = 3
+
+  // mark all matches
+  for (int k = 0; k < word.length; k++) {
+    int nx = x + k * dx;
+    int ny = y + k * dy;
+    markerMatrix[nx][ny] = markerValue; // Richtungswert setzen
+    markerMatrix[nx][ny] |= markerValue;
   }
   return true;
 }
