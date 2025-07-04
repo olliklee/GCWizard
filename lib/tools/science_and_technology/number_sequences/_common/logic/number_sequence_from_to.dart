@@ -12,7 +12,20 @@ class GetNumberFromToJobData {
   });
 }
 
-Future<List<BigInt>> calculateFromToAsync(GetNumberFromToJobData data, {SendPort? sendAsyncPort}) async {
+Future<List<BigInt>> calculateFromToAsync(GCWAsyncExecuterParameters? jobData) async {
+  if (jobData?.parameters is! GetNumberFromToJobData) return [];
+
+  var data = jobData!.parameters as GetNumberFromToJobData;
+  var output = await calculateFromTo(data, sendAsyncPort: jobData.sendAsyncPort);
+
+  jobData.sendAsyncPort?.send(output);
+
+  return output;
+}
+
+Future<List<BigInt>> calculateFromTo(GetNumberFromToJobData data,
+    {SendPort? sendAsyncPort}) async {
+
   List<BigInt> numberList = [];
 
     List<String> sequenceList = getSequenceList(data.sequence);
