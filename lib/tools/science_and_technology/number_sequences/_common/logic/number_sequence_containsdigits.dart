@@ -252,76 +252,8 @@ PositionOfSequenceOutput numberSequencesGetFirstPositionOfSequence(
       }
     }
   } else {
-    switch (sequence) {
-      case NumberSequencesMode.PRIMES:
-        sequenceList.addAll(prime_numbers);
-        break;
-      case NumberSequencesMode.MERSENNE_PRIMES:
-        sequenceList.addAll(mersenne_primes);
-        break;
-      case NumberSequencesMode.MERSENNE_EXPONENTS:
-        sequenceList.addAll(mersenne_exponents);
-        break;
-      case NumberSequencesMode.PERFECT_NUMBERS:
-        sequenceList.addAll(perfect_numbers);
-        break;
-      case NumberSequencesMode.PRIMARY_PSEUDOPERFECT_NUMBERS:
-        sequenceList.addAll(primary_pseudo_perfect_numbers);
-        break;
-      case NumberSequencesMode.SUPERPERFECT_NUMBERS:
-        sequenceList.addAll(superperfect_numbers);
-        break;
-      case NumberSequencesMode.SUBLIME_NUMBERS:
-        sequenceList.addAll(sublime_number);
-        break;
-      case NumberSequencesMode.WEIRD_NUMBERS:
-        sequenceList.addAll(weird_numbers);
-        break;
-      case NumberSequencesMode.LYCHREL:
-        sequenceList.addAll(lychrel_numbers);
-        break;
-      case NumberSequencesMode.PERMUTABLE_PRIMES:
-        sequenceList.addAll(permutable_primes);
-        break;
-      case NumberSequencesMode.MEMORABLE_PRIMES:
-        sequenceList.addAll(memorable_primes);
-        break;
-      case NumberSequencesMode.MEMORABLE_PRIMES_INDEXES:
-        sequenceList.addAll(memorable_primes_indexes);
-        break;
-      case NumberSequencesMode.LUCKY_NUMBERS:
-        sequenceList.addAll(lucky_numbers);
-        break;
-      case NumberSequencesMode.HAPPY_NUMBERS:
-        sequenceList.addAll(happy_numbers);
-        break;
-      case NumberSequencesMode.BUSY_BEAVER:
-        sequenceList.addAll(busy_beaver_numbers);
-        break;
-      case NumberSequencesMode.CARMICHAEL:
-        sequenceList.addAll(carmichael_numbers);
-        break;
-      case NumberSequencesMode.HARSHAD:
-        sequenceList.addAll(harshad_numbers);
-        break;
-      case NumberSequencesMode.TAXICAB:
-        sequenceList.addAll(taxicab_numbers);
-        break;
-      case NumberSequencesMode.SPHENIC:
-        sequenceList.addAll(sphenic_numbers);
-        break;
-      case NumberSequencesMode.BELL:
-        sequenceList.addAll(bell_numbers);
-        break;
-      case NumberSequencesMode.LONELY:
-        sequenceList.addAll(lonely_numbers);
-        break;
-      case NumberSequencesMode.PALINDROME_PRIMES:
-        sequenceList.addAll(palindrome_primes);
-        break;
-      default:
-        {}
-    }
+    sequenceList = getSequenceList(sequence);
+
     for (int i = 0; i < sequenceList.length; i++) {
       if (expr.hasMatch(sequenceList[i])) {
         int j = 0;

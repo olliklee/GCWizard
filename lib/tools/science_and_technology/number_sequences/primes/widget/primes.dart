@@ -2,6 +2,7 @@ import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_checknumber.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_containsdigits.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_digits.dart';
+import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_from_to.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_nthnumber.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_range.dart';
 
@@ -11,6 +12,10 @@ class NumberSequencePrimesCheckNumber extends NumberSequenceCheckNumber {
 
 class NumberSequencePrimesDigits extends NumberSequenceDigits {
   const NumberSequencePrimesDigits({super.key}) : super(mode: NumberSequencesMode.PRIMES, maxDigits: 7);
+}
+
+class NumberSequencePrimesFromTo extends NumberSequenceFromTo {
+  const NumberSequencePrimesFromTo({super.key}) : super(mode: NumberSequencesMode.PRIMES, maxIndex: 1000000);
 }
 
 class NumberSequencePrimesRange extends NumberSequenceRange {
