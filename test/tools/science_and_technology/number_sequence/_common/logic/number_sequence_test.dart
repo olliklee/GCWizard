@@ -54,12 +54,12 @@ void main() {
     for (var elem in _inputsToExpected) {
       test('sequence: ${elem['sequence']}, number: ${elem['number']}', () {
         var _actual = numberSequencesCheckNumber(elem['sequence'] as NumberSequencesMode, elem['number'] as BigInt?, elem['maxIndex'] as int);
-        expect(_actual, elem['expectedOutput']);
+        expect(_actual, elem['expectedOutput'] as int);
       });
     }
   });
 
-  group("numbersequence.getNumbersInRange:", () {
+  group("numbersequence.getNumbersRange", () {
     List<Map<String, Object?>> _inputsToExpected = [
       {'sequence' : NumberSequencesMode.CATALAN,          'start' : 10, 'stop' : 15, 'expectedOutput' : [16796, 58786, 208012, 742900, 2674440, 9694845]},
       {'sequence' : NumberSequencesMode.RECAMAN,          'start' : 10, 'stop' : 15, 'expectedOutput' : [11, 22, 10, 23, 9, 24]},
@@ -82,6 +82,32 @@ void main() {
       test('sequence: ${elem['sequence']}, start: ${elem['start']}, stop: ${elem['stop']}', () async {
         //var _actual = numberSequencesGetNumbersInRange(elem['sequence'] as NumberSequencesMode, elem['start'] as int?, elem['stop'] as int?);
         var _actual = await calculateRange(GetNumberRangeJobData(sequence: elem['sequence'] as NumberSequencesMode, start: elem['start'] as int, stop: elem['stop'] as int));
+        var length = (elem['expectedOutput'] as List<int>).length;
+        for (int i = 0; i < length; i++) {
+          expect(_actual[i], BigInt.from((elem['expectedOutput'] as List<int>)[i]));
+        }
+      });
+    }
+  });
+
+  group("numbersequence.getNumbersBetween:", () {
+    List<Map<String, Object?>> _inputsToExpected = [
+      {'sequence' : NumberSequencesMode.PRIMES,             'start' :  0,  'stop' : 10,   'expectedOutput' : [2, 3, 5, 7]},
+      {'sequence' : NumberSequencesMode.MERSENNE_EXPONENTS, 'start' : 10,  'stop' : 20,   'expectedOutput' : [13, 17, 19]},
+      {'sequence' : NumberSequencesMode.WEIRD_NUMBERS,      'start' : 20,  'stop' : 1000, 'expectedOutput' : [70, 836]},
+      {'sequence' : NumberSequencesMode.LYCHREL,            'start' : 879, 'stop' : 978,  'expectedOutput' : [879, 887, 978]},
+      {'sequence' : NumberSequencesMode.LUCKY_NUMBERS,      'start' : 30,  'stop' : 40,   'expectedOutput' : [31, 33, 37]},
+      {'sequence' : NumberSequencesMode.HAPPY_NUMBERS,      'start' : 10,  'stop' : 15,   'expectedOutput' : [10, 13]},
+      {'sequence' : NumberSequencesMode.CARMICHAEL,         'start' : 500, 'stop' : 1500, 'expectedOutput' : [561, 1105]},
+      {'sequence' : NumberSequencesMode.HARSHAD,            'start' : 40,  'stop' : 50,   'expectedOutput' : [40, 42, 45, 48, 50]},
+      {'sequence' : NumberSequencesMode.SPHENIC,            'start' : 30,  'stop' : 70,   'expectedOutput' : [30, 42, 66, 70]},
+      {'sequence' : NumberSequencesMode.LONELY,             'start' : 50,  'stop' : 100,  'expectedOutput' : [53]},
+      {'sequence' : NumberSequencesMode.PALINDROME_PRIMES,  'start' : 0,   'stop' : 10,   'expectedOutput' : [2, 3, 5, 7]},
+    ];
+
+    for (var elem in _inputsToExpected) {
+      test('sequence: ${elem['sequence']}, start: ${elem['start']}, stop: ${elem['stop']}', () async {
+        var _actual = await calculateFromToAsync(GCWAsyncExecuterParameters(GetNumberFromToJobData(sequence: elem['sequence'] as NumberSequencesMode, start: elem['start'] as int, stop: elem['stop'] as int)));
         var length = (elem['expectedOutput'] as List<int>).length;
         for (int i = 0; i < length; i++) {
           expect(_actual[i], BigInt.from((elem['expectedOutput'] as List<int>)[i]));
