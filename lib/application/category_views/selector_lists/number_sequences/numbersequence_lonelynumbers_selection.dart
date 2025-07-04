@@ -15,6 +15,7 @@ class NumberSequenceLonelyNumbersSelection extends GCWSelection {
       return [
         className(const NumberSequenceLonelyNumbersNthNumber()),
         className(const NumberSequenceLonelyNumbersRange()),
+        className(const NumberSequenceLonelyNumbersFromTo()),
         className(const NumberSequenceLonelyNumbersDigits()),
         className(const NumberSequenceLonelyNumbersCheckNumber()),
         className(const NumberSequenceLonelyNumbersContainsDigits()),

@@ -15,6 +15,7 @@ class NumberSequenceMersenneExponentsSelection extends GCWSelection {
       return [
         className(const NumberSequenceMersenneExponentsNthNumber()),
         className(const NumberSequenceMersenneExponentsRange()),
+        className(const NumberSequenceMersenneExponentsFromTo()),
         className(const NumberSequenceMersenneExponentsDigits()),
         className(const NumberSequenceMersenneExponentsCheckNumber()),
         className(const NumberSequenceMersenneExponentsContainsDigits()),

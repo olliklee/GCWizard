@@ -15,6 +15,7 @@ class NumberSequenceLuckyNumbersSelection extends GCWSelection {
       return [
         className(const NumberSequenceLuckyNumbersNthNumber()),
         className(const NumberSequenceLuckyNumbersRange()),
+        className(const NumberSequenceLuckyNumbersFromTo()),
         className(const NumberSequenceLuckyNumbersDigits()),
         className(const NumberSequenceLuckyNumbersCheckNumber()),
         className(const NumberSequenceLuckyNumbersContainsDigits()),

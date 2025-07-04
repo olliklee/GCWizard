@@ -15,6 +15,7 @@ class NumberSequenceLychrelSelection extends GCWSelection {
       return [
         className(const NumberSequenceLychrelNthNumber()),
         className(const NumberSequenceLychrelRange()),
+        className(const NumberSequenceLychrelFromTo()),
         className(const NumberSequenceLychrelDigits()),
         className(const NumberSequenceLychrelCheckNumber()),
         className(const NumberSequenceLychrelContainsDigits()),

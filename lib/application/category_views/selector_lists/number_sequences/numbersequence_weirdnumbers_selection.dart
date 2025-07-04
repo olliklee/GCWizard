@@ -15,6 +15,7 @@ class NumberSequenceWeirdNumbersSelection extends GCWSelection {
       return [
         className(const NumberSequenceWeirdNumbersNthNumber()),
         className(const NumberSequenceWeirdNumbersRange()),
+        className(const NumberSequenceWeirdNumbersFromTo()),
         className(const NumberSequenceWeirdNumbersDigits()),
         className(const NumberSequenceWeirdNumbersCheckNumber()),
         className(const NumberSequenceWeirdNumbersContainsDigits()),

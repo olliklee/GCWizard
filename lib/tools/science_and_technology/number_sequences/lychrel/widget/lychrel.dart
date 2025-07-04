@@ -4,6 +4,7 @@ import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_digits.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_nthnumber.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_range.dart';
+import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_from_to.dart';
 
 class NumberSequenceLychrelCheckNumber extends NumberSequenceCheckNumber {
   const NumberSequenceLychrelCheckNumber({super.key})
@@ -12,6 +13,10 @@ class NumberSequenceLychrelCheckNumber extends NumberSequenceCheckNumber {
 
 class NumberSequenceLychrelDigits extends NumberSequenceDigits {
   const NumberSequenceLychrelDigits({super.key}) : super(mode: NumberSequencesMode.LYCHREL, maxDigits: 6);
+}
+
+class NumberSequenceLychrelFromTo extends NumberSequenceFromTo {
+  const NumberSequenceLychrelFromTo({super.key}) : super(mode: NumberSequencesMode.LYCHREL, maxIndex: 269793);
 }
 
 class NumberSequenceLychrelRange extends NumberSequenceRange {

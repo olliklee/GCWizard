@@ -4,6 +4,7 @@ import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_digits.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_nthnumber.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_range.dart';
+import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_from_to.dart';
 
 class NumberSequenceLonelyNumbersCheckNumber extends NumberSequenceCheckNumber {
   const NumberSequenceLonelyNumbersCheckNumber({super.key}) : super(mode: NumberSequencesMode.LONELY, maxIndex: 212);
@@ -11,6 +12,10 @@ class NumberSequenceLonelyNumbersCheckNumber extends NumberSequenceCheckNumber {
 
 class NumberSequenceLonelyNumbersDigits extends NumberSequenceDigits {
   const NumberSequenceLonelyNumbersDigits({super.key}) : super(mode: NumberSequencesMode.LONELY, maxDigits: 14);
+}
+
+class NumberSequenceLonelyNumbersFromTo extends NumberSequenceFromTo {
+  const NumberSequenceLonelyNumbersFromTo({super.key}) : super(mode: NumberSequencesMode.LONELY, maxIndex: 90874329411895);
 }
 
 class NumberSequenceLonelyNumbersRange extends NumberSequenceRange {

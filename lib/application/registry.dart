@@ -423,7 +423,6 @@ import 'package:gc_wizard/tools/science_and_technology/lcm/widget/lcm.dart';
 import 'package:gc_wizard/tools/science_and_technology/mathematical_constants/widget/mathematical_constants.dart';
 import 'package:gc_wizard/tools/science_and_technology/maya_calendar/widget/maya_calendar.dart';
 import 'package:gc_wizard/tools/science_and_technology/music_notes/music_notes/widget/music_notes.dart';
-import 'package:gc_wizard/tools/science_and_technology/number_sequences/Harshad/widget/Harshad_numbers.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/bell/widget/bell.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/busybeaver/widget/busybeaver.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/carmichael/widget/carmichael_numbers.dart';
@@ -432,6 +431,7 @@ import 'package:gc_wizard/tools/science_and_technology/number_sequences/factoria
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/fermat/widget/fermat.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/fibonacci/widget/fibonacci.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/happy_numbers/widget/happy_numbers.dart';
+import 'package:gc_wizard/tools/science_and_technology/number_sequences/harshad/widget/harshad_numbers.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/jacobsthal/widget/jacobsthal.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/jacobsthal_lucas/widget/jacobsthal_lucas.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/jacobsthal_oblong/widget/jacobsthal_oblong.dart';
@@ -5350,6 +5350,11 @@ void initializeRegistry(BuildContext context) {
         id_prefix: 'lonelynumbers_',
         searchKeys: const []),
     GCWTool(
+        tool: const NumberSequenceLonelyNumbersFromTo(),
+        id: 'numbersequence_from_to',
+        id_prefix: 'lonelynumbers_',
+        searchKeys: const []),
+    GCWTool(
         tool: const NumberSequenceLonelyNumbersCheckNumber(),
         id: 'numbersequence_check',
         id_prefix: 'lonelynumbers_',
@@ -5404,6 +5409,11 @@ void initializeRegistry(BuildContext context) {
         id_prefix: 'carmichaelnumbers_',
         searchKeys: const []),
     GCWTool(
+        tool: const NumberSequenceCarmichaelNumbersFromTo(),
+        id: 'numbersequence_from_to',
+        id_prefix: 'carmichaelnumbers_',
+        searchKeys: const []),
+    GCWTool(
         tool: const NumberSequenceCarmichaelNumbersCheckNumber(),
         id: 'numbersequence_check',
         id_prefix: 'carmichaelnumbers_',
@@ -5431,6 +5441,11 @@ void initializeRegistry(BuildContext context) {
         id_prefix: 'sphenicnumbers_',
         searchKeys: const []),
     GCWTool(
+        tool: const NumberSequenceSphenicNumbersFromTo(),
+        id: 'numbersequence_from_to',
+        id_prefix: 'sphenicnumbers_',
+        searchKeys: const []),
+    GCWTool(
         tool: const NumberSequenceSphenicNumbersCheckNumber(),
         id: 'numbersequence_check',
         id_prefix: 'sphenicnumbers_',
@@ -5455,6 +5470,11 @@ void initializeRegistry(BuildContext context) {
     GCWTool(
         tool: const NumberSequenceHarshadNumbersRange(),
         id: 'numbersequence_range',
+        id_prefix: 'harshadnumbers_',
+        searchKeys: const []),
+    GCWTool(
+        tool: const NumberSequenceHarshadNumbersFromTo(),
+        id: 'numbersequence_from_to',
         id_prefix: 'harshadnumbers_',
         searchKeys: const []),
     GCWTool(
@@ -5509,6 +5529,11 @@ void initializeRegistry(BuildContext context) {
     GCWTool(
         tool: const NumberSequencePalindromePrimesRange(),
         id: 'numbersequence_range',
+        id_prefix: 'palindromeprimes_',
+        searchKeys: const []),
+    GCWTool(
+        tool: const NumberSequencePalindromePrimesFromTo(),
+        id: 'numbersequence_from_to',
         id_prefix: 'palindromeprimes_',
         searchKeys: const []),
     GCWTool(
@@ -5948,6 +5973,11 @@ void initializeRegistry(BuildContext context) {
         id_prefix: 'mersenne_exponents_',
         searchKeys: const []),
     GCWTool(
+        tool: const NumberSequenceMersenneExponentsFromTo(),
+        id: 'numbersequence_from_to',
+        id_prefix: 'mersenne_exponents_',
+        searchKeys: const []),
+    GCWTool(
         tool: const NumberSequenceMersenneExponentsCheckNumber(),
         id: 'numbersequence_check',
         id_prefix: 'mersenne_exponents_',
@@ -6029,6 +6059,11 @@ void initializeRegistry(BuildContext context) {
         id_prefix: 'weird_numbers_',
         searchKeys: const []),
     GCWTool(
+        tool: const NumberSequenceWeirdNumbersFromTo(),
+        id: 'numbersequence_from_to',
+        id_prefix: 'weird_numbers_',
+        searchKeys: const []),
+    GCWTool(
         tool: const NumberSequenceWeirdNumbersCheckNumber(),
         id: 'numbersequence_check',
         id_prefix: 'weird_numbers_',
@@ -6083,6 +6118,11 @@ void initializeRegistry(BuildContext context) {
         id_prefix: 'lucky_numbers_',
         searchKeys: const []),
     GCWTool(
+        tool: const NumberSequenceLuckyNumbersFromTo(),
+        id: 'numbersequence_from_to',
+        id_prefix: 'lucky_numbers_',
+        searchKeys: const []),
+    GCWTool(
         tool: const NumberSequenceLuckyNumbersCheckNumber(),
         id: 'numbersequence_check',
         id_prefix: 'lucky_numbers_',
@@ -6107,6 +6147,11 @@ void initializeRegistry(BuildContext context) {
     GCWTool(
         tool: const NumberSequenceHappyNumbersRange(),
         id: 'numbersequence_range',
+        id_prefix: 'happy_numbers_',
+        searchKeys: const []),
+    GCWTool(
+        tool: const NumberSequenceHappyNumbersFromTo(),
+        id: 'numbersequence_from_to',
         id_prefix: 'happy_numbers_',
         searchKeys: const []),
     GCWTool(
@@ -6171,6 +6216,11 @@ void initializeRegistry(BuildContext context) {
     GCWTool(
         tool: const NumberSequenceLychrelRange(),
         id: 'numbersequence_range',
+        id_prefix: 'lychrel_numbers_',
+        searchKeys: const []),
+    GCWTool(
+        tool: const NumberSequenceLychrelFromTo(),
+        id: 'numbersequence_from_to',
         id_prefix: 'lychrel_numbers_',
         searchKeys: const []),
     GCWTool(
@@ -6279,6 +6329,11 @@ void initializeRegistry(BuildContext context) {
     GCWTool(
         tool: const NumberSequencePrimesRange(),
         id: 'numbersequence_range',
+        id_prefix: 'primes_',
+        searchKeys: const []),
+    GCWTool(
+        tool: const NumberSequencePrimesFromTo(),
+        id: 'numbersequence_from_to',
         id_prefix: 'primes_',
         searchKeys: const []),
     GCWTool(

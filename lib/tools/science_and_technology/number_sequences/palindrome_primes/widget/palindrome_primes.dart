@@ -4,6 +4,7 @@ import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_digits.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_nthnumber.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_range.dart';
+import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_from_to.dart';
 
 class NumberSequencePalindromePrimesCheckNumber extends NumberSequenceCheckNumber {
   const NumberSequencePalindromePrimesCheckNumber({super.key}) : super(mode: NumberSequencesMode.PALINDROME_PRIMES, maxIndex: 10000);
@@ -11,6 +12,10 @@ class NumberSequencePalindromePrimesCheckNumber extends NumberSequenceCheckNumbe
 
 class NumberSequencePalindromePrimesDigits extends NumberSequenceDigits {
   const NumberSequencePalindromePrimesDigits({super.key}) : super(mode: NumberSequencesMode.PALINDROME_PRIMES, maxDigits: 11);
+}
+
+class NumberSequencePalindromePrimesFromTo extends NumberSequenceFromTo {
+  const NumberSequencePalindromePrimesFromTo({super.key}) : super(mode: NumberSequencesMode.PALINDROME_PRIMES, maxIndex: 13649694631);
 }
 
 class NumberSequencePalindromePrimesRange extends NumberSequenceRange {

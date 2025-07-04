@@ -4,6 +4,7 @@ import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_digits.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_nthnumber.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_range.dart';
+import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_from_to.dart';
 
 class NumberSequenceHappyNumbersCheckNumber extends NumberSequenceCheckNumber {
   const NumberSequenceHappyNumbersCheckNumber({super.key})
@@ -13,6 +14,11 @@ class NumberSequenceHappyNumbersCheckNumber extends NumberSequenceCheckNumber {
 class NumberSequenceHappyNumbersDigits extends NumberSequenceDigits {
   const NumberSequenceHappyNumbersDigits({super.key})
       : super(mode: NumberSequencesMode.HAPPY_NUMBERS, maxDigits: 6);
+}
+
+class NumberSequenceHappyNumbersFromTo extends NumberSequenceFromTo {
+  const NumberSequenceHappyNumbersFromTo({super.key})
+      : super(mode: NumberSequencesMode.HAPPY_NUMBERS, maxIndex: 692961);
 }
 
 class NumberSequenceHappyNumbersRange extends NumberSequenceRange {
