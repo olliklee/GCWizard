@@ -15,6 +15,7 @@ class NumberSequenceHappyNumbersSelection extends GCWSelection {
       return [
         className(const NumberSequenceHappyNumbersNthNumber()),
         className(const NumberSequenceHappyNumbersRange()),
+        className(const NumberSequenceHappyNumbersFromTo()),
         className(const NumberSequenceHappyNumbersDigits()),
         className(const NumberSequenceHappyNumbersCheckNumber()),
         className(const NumberSequenceHappyNumbersContainsDigits()),

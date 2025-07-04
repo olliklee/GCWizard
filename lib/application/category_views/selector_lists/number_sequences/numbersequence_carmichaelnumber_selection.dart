@@ -15,6 +15,7 @@ class NumberSequenceCarmichaelNumbersSelection extends GCWSelection {
       return [
         className(const NumberSequenceCarmichaelNumbersNthNumber()),
         className(const NumberSequenceCarmichaelNumbersRange()),
+        className(const NumberSequenceCarmichaelNumbersFromTo()),
         className(const NumberSequenceCarmichaelNumbersDigits()),
         className(const NumberSequenceCarmichaelNumbersCheckNumber()),
         className(const NumberSequenceCarmichaelNumbersContainsDigits()),

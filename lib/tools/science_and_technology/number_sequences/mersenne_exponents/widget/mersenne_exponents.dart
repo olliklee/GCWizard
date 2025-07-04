@@ -4,6 +4,8 @@ import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_digits.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_nthnumber.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_range.dart';
+import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_from_to.dart';
+
 
 class NumberSequenceMersenneExponentsCheckNumber extends NumberSequenceCheckNumber {
   const NumberSequenceMersenneExponentsCheckNumber({super.key})
@@ -17,6 +19,12 @@ class NumberSequenceMersenneExponentsDigits extends NumberSequenceDigits {
 
 class NumberSequenceMersenneExponentsRange extends NumberSequenceRange {
   const NumberSequenceMersenneExponentsRange({super.key})
+      : super(mode: NumberSequencesMode.MERSENNE_EXPONENTS, maxIndex: 136279841);
+}
+
+
+class NumberSequenceMersenneExponentsFromTo extends NumberSequenceFromTo {
+  const NumberSequenceMersenneExponentsFromTo({super.key})
       : super(mode: NumberSequencesMode.MERSENNE_EXPONENTS, maxIndex: 52);
 }
 

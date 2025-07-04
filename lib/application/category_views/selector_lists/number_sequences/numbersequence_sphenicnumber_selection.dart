@@ -15,6 +15,7 @@ class NumberSequenceSphenicNumbersSelection extends GCWSelection {
       return [
         className(const NumberSequenceSphenicNumbersNthNumber()),
         className(const NumberSequenceSphenicNumbersRange()),
+        className(const NumberSequenceSphenicNumbersFromTo()),
         className(const NumberSequenceSphenicNumbersDigits()),
         className(const NumberSequenceSphenicNumbersCheckNumber()),
         className(const NumberSequenceSphenicNumbersContainsDigits()),

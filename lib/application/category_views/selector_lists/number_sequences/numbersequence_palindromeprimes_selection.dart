@@ -15,6 +15,7 @@ class NumberSequencePalindromePrimesSelection extends GCWSelection {
       return [
         className(const NumberSequencePalindromePrimesNthNumber()),
         className(const NumberSequencePalindromePrimesRange()),
+        className(const NumberSequencePalindromePrimesFromTo()),
         className(const NumberSequencePalindromePrimesDigits()),
         className(const NumberSequencePalindromePrimesCheckNumber()),
         className(const NumberSequencePalindromePrimesContainsDigits()),
