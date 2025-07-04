@@ -68,6 +68,7 @@ class _NumberSequenceFromToState extends State<NumberSequenceFromTo> {
           onChanged: (value) {
             setState(() {
               _currentInputStop = value;
+
             });
           },
         ),
@@ -114,10 +115,10 @@ class _NumberSequenceFromToState extends State<NumberSequenceFromTo> {
   }
 
   void _showOutput(List<BigInt> output) {
-    List<List<String>> columnData = [['n', i18n(context, 'common_element')]];
+    List<List<String>> columnData = [[i18n(context, 'common_element')]];
     for (int i = 0; i < output.length; i++) {
       BigInt element = output[i];
-      columnData.add([(i + _currentInputStart).toString(), element.toString()]);
+      columnData.add([element.toString()]);
     }
 
     _currentOutput = GCWDefaultOutput(child: GCWColumnedMultilineOutput(data: columnData, flexValues: [1, 5], hasHeader: true,));
