@@ -69,6 +69,7 @@ part 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/lo
 part 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/logic/number_sequence_from_to.dart';
 part 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/logic/number_sequence_nthnumber.dart';
 part 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/logic/number_sequence_range.dart';
+part 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/logic/number_generators.dart';
 
 const Map<NumberSequencesMode, String> NUMBERSEQUENCE_TITLE = {
   NumberSequencesMode.LUCAS: 'numbersequence_lucas_title',
