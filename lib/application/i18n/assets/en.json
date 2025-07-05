@@ -3800,6 +3800,7 @@
   "numbersequence_nth_description": "Attention: First number is n = 1, whereas some sources start at n = 0",
   "numbersequence_from_to_title": "Numbers between 2 numbers",
   "numbersequence_from_to_description": "Returns all numbers in a given range",
+  "numbersequence_from_to_hint_description": "Calculates the numbers between %s1 and %s2 - That could produce a long list. \n\nAre you sure to do the calculation?",
   "numbersequence_range_title": "Range of numbers",
   "numbersequence_range_description": "Attention: First number is n = 1, whereas some sources start at n = 0",
   "numbersequence_check_title": "Find Number",

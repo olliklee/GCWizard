@@ -72,12 +72,11 @@ class _NumberSequenceFromToState extends State<NumberSequenceFromTo> {
           },
         ),
         GCWSubmitButton(onPressed: () {
-          int countLines = (_currentInputStop - _currentInputStart).abs();
           setState(() {
             showGCWAlertDialog(
                 context,
-                i18n(context, 'numbersequence_range_hint_title'),
-                i18n(context, 'numbersequence_range_hint_description',parameters: [countLines]),
+                i18n(context, 'numbersequence_range_title'),
+                i18n(context, 'numbersequence_from_to_hint_description',parameters: [_currentInputStart, _currentInputStop]),
                     () async {
                       _calculateFromTo();
                 }, cancelButton: true);
