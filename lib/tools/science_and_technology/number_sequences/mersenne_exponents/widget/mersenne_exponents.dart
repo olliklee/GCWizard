@@ -25,7 +25,7 @@ class NumberSequenceMersenneExponentsRange extends NumberSequenceRange {
 
 class NumberSequenceMersenneExponentsFromTo extends NumberSequenceFromTo {
   const NumberSequenceMersenneExponentsFromTo({super.key})
-      : super(mode: NumberSequencesMode.MERSENNE_EXPONENTS, maxIndex: 52);
+      : super(mode: NumberSequencesMode.MERSENNE_EXPONENTS, maxIndex: 136279841);
 }
 
 class NumberSequenceMersenneExponentsNthNumber extends NumberSequenceNthNumber {

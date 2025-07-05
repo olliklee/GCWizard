@@ -68,7 +68,6 @@ class _NumberSequenceFromToState extends State<NumberSequenceFromTo> {
           onChanged: (value) {
             setState(() {
               _currentInputStop = value;
-
             });
           },
         ),
