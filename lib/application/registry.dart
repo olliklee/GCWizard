@@ -5674,6 +5674,11 @@ void initializeRegistry(BuildContext context) {
         id_prefix: 'fibonacci_',
         searchKeys: const []),
     GCWTool(
+        tool: const NumberSequenceFibonacciFromTo(),
+        id: 'numbersequence_from_to',
+        id_prefix: 'fibonacci_',
+        searchKeys: const []),
+    GCWTool(
         tool: const NumberSequenceFibonacciCheckNumber(),
         id: 'numbersequence_check',
         id_prefix: 'fibonacci_',

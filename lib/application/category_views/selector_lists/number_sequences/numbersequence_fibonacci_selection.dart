@@ -15,6 +15,7 @@ class NumberSequenceFibonacciSelection extends GCWSelection {
       return [
         className(const NumberSequenceFibonacciNthNumber()),
         className(const NumberSequenceFibonacciRange()),
+        className(const NumberSequenceFibonacciFromTo()),
         className(const NumberSequenceFibonacciDigits()),
         className(const NumberSequenceFibonacciCheckNumber()),
         className(const NumberSequenceFibonacciContainsDigits()),

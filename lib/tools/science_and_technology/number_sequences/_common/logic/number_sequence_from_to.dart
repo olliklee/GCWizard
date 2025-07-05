@@ -23,17 +23,41 @@ Future<List<BigInt>> calculateFromToAsync(GCWAsyncExecuterParameters? jobData) a
   return output;
 }
 
-Future<List<BigInt>> calculateFromTo(GetNumberFromToJobData data,
-    {SendPort? sendAsyncPort}) async {
-
+Future<List<BigInt>> calculateFromTo(GetNumberFromToJobData data, {SendPort? sendAsyncPort}) async {
   List<BigInt> numberList = [];
 
+  if (data.sequence == NumberSequencesMode.FIBONACCI) {
+    BigInt pn0 = Zero;
+    BigInt pn1 = One;
+    BigInt bigIntStart = BigInt.from(data.start);
+    BigInt bigIntStop = BigInt.from(data.stop);
+
+    if (pn0 >= bigIntStart && pn1 <= bigIntStop) {
+      numberList.add(pn0);
+    }
+
+    BigInt current = pn0 + pn1;
+
+    while (current <= bigIntStop) {
+      if (current >= bigIntStart) {
+        numberList.add(current);
+      }
+      pn0 = pn1;
+      pn1 = current;
+      current = pn0 + pn1;
+
+      if (pn0 > bigIntStop && pn1 > bigIntStop && current > bigIntStop) break;
+    }
+  } else {
     List<String> sequenceList = getSequenceList(data.sequence);
+
     for (String numberStr in sequenceList) {
       BigInt number = BigInt.parse(numberStr);
       if (number >= BigInt.from(data.start) && number <= BigInt.from(data.stop)) {
         numberList.add(number);
       }
+    }
   }
+
   return numberList;
 }

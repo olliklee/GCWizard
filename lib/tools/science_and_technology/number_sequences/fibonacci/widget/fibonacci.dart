@@ -2,6 +2,7 @@ import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_checknumber.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_containsdigits.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_digits.dart';
+import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_from_to.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_nthnumber.dart';
 import 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/widget/numbersequences_range.dart';
 
@@ -17,6 +18,11 @@ class NumberSequenceFibonacciDigits extends NumberSequenceDigits {
 
 class NumberSequenceFibonacciRange extends NumberSequenceRange {
   const NumberSequenceFibonacciRange({super.key})
+      : super(mode: NumberSequencesMode.FIBONACCI, maxIndex: 111111);
+}
+
+class NumberSequenceFibonacciFromTo extends NumberSequenceFromTo {
+  const NumberSequenceFibonacciFromTo({super.key})
       : super(mode: NumberSequencesMode.FIBONACCI, maxIndex: 111111);
 }
 
