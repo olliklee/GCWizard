@@ -1,5 +1,12 @@
 part of 'package:gc_wizard/tools/science_and_technology/number_sequences/_common/logic/number_sequence.dart';
 
+final Zero = BigInt.zero;
+final One = BigInt.one;
+final Two = BigInt.two;
+final Three = BigInt.from(3);
+final sqrt5 = sqrt(5);
+final sqrt2 = sqrt(2);
+
 Iterable<BigInt> fibonacciGenerator(int start, int stop) sync* {
   BigInt pn0 = Zero;
   BigInt pn1 = One;
@@ -148,16 +155,12 @@ Iterable<BigInt> recamanGenerator(int start, int stop) sync* {
   }
 }
 
-BigInt _getMersenneFermat(int n) {
-  return Two.pow(n) + One;
-}
-
-BigInt _getFermat(int n) {
-  return Two.pow(pow(2, n) as int) + One;
-}
-
-BigInt _getMersenne(int n) {
-  return Two.pow(n) - One;
+BigInt _getBinomialCoefficient(int n, int k) {
+  if (n == k) {
+    return Zero;
+  } else {
+    return _getfactorial(n) ~/ _getfactorial(k) ~/ _getfactorial(n - k);
+  }
 }
 
 BigInt _getCatalan(int n) {
@@ -167,6 +170,18 @@ BigInt _getCatalan(int n) {
     return _getBinomialCoefficient(2 * n, n) ~/ (BigInt.from(n) + One);
   } catch (e) {
     return BigInt.from(-1);
+  }
+}
+
+BigInt _getFermat(int n) {
+  return Two.pow(pow(2, n) as int) + One;
+}
+
+BigInt _getfactorial(int n) {
+  if (n > 0) {
+    return n <= 1 ? One : BigInt.from(n) * _getfactorial(n - 1);
+  } else {
+    return One;
   }
 }
 
@@ -182,20 +197,12 @@ BigInt _getJacobsthalOblong(int n) {
   return _getJacobsthal(n) * _getJacobsthal(n + 1);
 }
 
-BigInt _getfactorial(int n) {
-  if (n > 0) {
-    return n <= 1 ? One : BigInt.from(n) * _getfactorial(n - 1);
-  } else {
-    return One;
-  }
+BigInt _getMersenne(int n) {
+  return Two.pow(n) - One;
 }
 
-BigInt _getBinomialCoefficient(int n, int k) {
-  if (n == k) {
-    return Zero;
-  } else {
-    return _getfactorial(n) ~/ _getfactorial(k) ~/ _getfactorial(n - k);
-  }
+BigInt _getMersenneFermat(int n) {
+  return Two.pow(n) + One;
 }
 
 // void main() {

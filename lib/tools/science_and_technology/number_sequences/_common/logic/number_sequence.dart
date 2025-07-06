@@ -229,10 +229,3 @@ List<String> getSequenceList(NumberSequencesMode mode) {
   }
   return sequenceList;
 }
-
-final Zero = BigInt.zero;
-final One = BigInt.one;
-final Two = BigInt.two;
-final Three = BigInt.from(3);
-final sqrt5 = sqrt(5);
-final sqrt2 = sqrt(2);
