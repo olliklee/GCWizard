@@ -282,7 +282,7 @@ class PianoCalculator {
     final scientificStr = scientific + getScientificSuffix(scientific);
 
     // italian & german
-    final String octaveSuffix = (octave - 1).toString();
+    final String octaveSuffix = (octave - 2).toString();
     final italian = _notesItalian[chromaIndex].split('/').map((s) => "$s$octaveSuffix").join('/');
 
     final german = _notesGerman[chromaIndex].split('/').map((part) {
