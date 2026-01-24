@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gc_wizard/application/app_builder.dart';
 import 'package:gc_wizard/application/settings/logic/preferences.dart';
@@ -275,13 +276,21 @@ void _initDefaultSettings(PreferencesInitMode mode, {String reinitSinglePreferen
   if (reinitSinglePreference == PREFERENCE_TABS_USE_DEFAULT_TAB ||
       _reinitAll ||
       Prefs.get(PREFERENCE_TABS_USE_DEFAULT_TAB) == null) {
-    Prefs.setBool(PREFERENCE_TABS_USE_DEFAULT_TAB, true);
+    if (kIsWeb) {
+      Prefs.setBool(PREFERENCE_TABS_USE_DEFAULT_TAB, true);
+    } else {
+      Prefs.setBool(PREFERENCE_TABS_USE_DEFAULT_TAB, false);
+    }
   }
 
   if (reinitSinglePreference == PREFERENCE_TABS_DEFAULT_TAB ||
       _reinitAll ||
       Prefs.get(PREFERENCE_TABS_DEFAULT_TAB) == null) {
-    Prefs.setInt(PREFERENCE_TABS_DEFAULT_TAB, 0);
+    if (kIsWeb) {
+      Prefs.setInt(PREFERENCE_TABS_DEFAULT_TAB, 0);
+    } else {
+      Prefs.setInt(PREFERENCE_TABS_DEFAULT_TAB, 2);
+    }
   }
 
   if (reinitSinglePreference == PREFERENCE_TABS_LAST_VIEWED_TAB ||
