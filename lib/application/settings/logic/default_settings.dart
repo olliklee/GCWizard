@@ -275,13 +275,13 @@ void _initDefaultSettings(PreferencesInitMode mode, {String reinitSinglePreferen
   if (reinitSinglePreference == PREFERENCE_TABS_USE_DEFAULT_TAB ||
       _reinitAll ||
       Prefs.get(PREFERENCE_TABS_USE_DEFAULT_TAB) == null) {
-    Prefs.setBool(PREFERENCE_TABS_USE_DEFAULT_TAB, false);
+    Prefs.setBool(PREFERENCE_TABS_USE_DEFAULT_TAB, true);
   }
 
   if (reinitSinglePreference == PREFERENCE_TABS_DEFAULT_TAB ||
       _reinitAll ||
       Prefs.get(PREFERENCE_TABS_DEFAULT_TAB) == null) {
-    Prefs.setInt(PREFERENCE_TABS_DEFAULT_TAB, 2);
+    Prefs.setInt(PREFERENCE_TABS_DEFAULT_TAB, 0);
   }
 
   if (reinitSinglePreference == PREFERENCE_TABS_LAST_VIEWED_TAB ||
