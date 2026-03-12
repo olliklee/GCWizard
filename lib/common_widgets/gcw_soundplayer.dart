@@ -25,7 +25,6 @@ class GCWSoundPlayer extends StatefulWidget {
 }
 
 class _GCWSoundPlayerState extends State<GCWSoundPlayer> {
-  // AudioCache audioCache = AudioCache();
   late AudioPlayer advancedPlayer;
 
   late StreamSubscription<Duration> _onPositionChangedStream;
@@ -78,7 +77,7 @@ class _GCWSoundPlayerState extends State<GCWSoundPlayer> {
     var byteData = widget.file.bytes;
 
     if (kIsWeb) {
-      // do nothing - web does not support local filö or byte array
+      // do nothing - web does not support local file or byte array
     } else {
       _audioFile = await _writeToFile(ByteData.sublistView(byteData)); // <= returns File
     }
@@ -183,7 +182,6 @@ class _GCWSoundPlayerState extends State<GCWSoundPlayer> {
           var newPosition = (_totalDurationInMS! * _currentSliderPosition).floor();
           await advancedPlayer.seek(Duration(milliseconds: newPosition));
         }
-
         await advancedPlayer.resume();
       } else {
         await advancedPlayer.play(DeviceFileSource(_audioFile.path));
@@ -206,7 +204,6 @@ class _GCWSoundPlayerState extends State<GCWSoundPlayer> {
     final buffer = data.buffer;
     Directory tempDir = await getApplicationDocumentsDirectory();
     String tempPath = tempDir.path;
-    // var filePath = tempPath + '/${advancedPlayer.playerId}.tmp';
     String suffix = fileExtension((widget.file.fileType));
     var filePath = tempPath + '/${advancedPlayer.playerId}.$suffix';
 
